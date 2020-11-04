@@ -94,9 +94,9 @@ int main()
   while(start_price <= max_price)
     {
     
-      cout << right << setw(11) << fixed << setprecision(2) << start_price
+      cout << right << setw(12) << fixed << setprecision(2) << start_price
 	   << setw(17) << setprecision(2) << tax_calc(tax_percent, start_price)
-	   << setw(15) << setprecision(2) << taxed_price(tax_percent, start_price) << endl;
+	   << setw(20) << setprecision(2) << taxed_price(tax_percent, start_price) << endl;
 
       start_price += step;
     }

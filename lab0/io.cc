@@ -42,7 +42,7 @@ int main(){
   cin >> num;
   cin >> f;
   cout << "Du skrev in heltalet: " << setw(11) << num << endl;
-  cout << "Du skrev in flyttalet: " << setw(10) << setprecision(4) << f << endl << endl;
+  cout << "Du skrev in flyttalet: " << setw(10) << setprecision(3) << f << endl << endl;
   cin.ignore(numeric_limits<streamsize>::max(),'\n');
 
 
@@ -50,7 +50,7 @@ int main(){
   cin >> f;
   cin >> num;
   cout << "Du skrev in heltalet:" << setfill('-') << setw(11) << num << endl;
-  cout << "Du skrev in flyttalet:" << setfill('-') << setw(10) << setprecision(4) << f << endl << endl;
+  cout << "Du skrev in flyttalet:" << setfill('-') << setw(10) << setprecision(3) << f << endl << endl;
   cin.ignore(numeric_limits<streamsize>::max(),'\n');
   
   cout << "Skriv in ett tecken: " << flush;
