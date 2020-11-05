@@ -2,13 +2,25 @@
 #include <string>
 #include <iostream>
 
+// Bra jobbat! Tycker det ser fint ut men har några små kompletteringar
+// ni ska fixa, samt en del kommentarer att läsas!
+
+// Kommentar: Vill vi använda hela namespace std i framtiden?
 using namespace std;
 
+// Komplettering: Indenteringen är lite off ibland, om det beror
+//                på att ni inte indenterat korrekt så fixa det.
+//                Om det bara är våra editors som krånglar det så
+//                strunta i den här kompletteringen.
+
+// Kommentar: Vad är skillnad mellan endl och '\n'?
+
+// Kommentar: Kan skrivas som:
+//            return price * tax / 100;
+// Kommentar: Riktigt fint med whitespace mellan operatorer!!
 float tax_calc(float tax, float price)
 {
-  float tax_value{};
-  tax_value = price * tax / 100;
-  return tax_value;
+  return price * tax / 100;
 }
 
 float taxed_price(float tax, float price)
@@ -25,7 +37,9 @@ int main()
   float step{};
   float tax_percent{};
 
-  cout << "INMATNINGSDEL" << endl << string(12, '=') << endl;
+  // Kommentar: Här känns det rimligare att använda '\n' efter första texten
+  //            "INMATNINGSDEL\n" liksom. Men det är väl smaksak!
+  cout << "INMATNINGSDEL\n" << string(12, '=') << endl;
 
   do
     {
@@ -86,17 +100,19 @@ int main()
     }
   while(tax_percent <= 0);
 
-  cout << "MOMSTABELLEN" << endl << string(12, '=') << endl;
+  cout << "MOMSTABELLEN\n" << string(12, '=') << endl;
   cout << right << setw(12) << "Pris" << setw(17) << "Moms"
        << setw(20) << "Pris med moms" << endl;
   cout << string(49, '-') << endl;
 
   while(start_price <= max_price)
     {
-    
-      cout << right << setw(12) << fixed << setprecision(2) << start_price
-	   << setw(17) << setprecision(2) << tax_calc(tax_percent, start_price)
-	   << setw(20) << setprecision(2) << taxed_price(tax_percent, start_price) << endl;
+      // Komplettering: Ska indenteras rätt enligt 1-4
+      cout << right << setw(12) << fixed << setprecision(2)
+	   << start_price << setw(17) << setprecision(2)
+	   << tax_calc(tax_percent, start_price) << setw(20)
+	   << setprecision(2) << taxed_price(tax_percent, start_price)
+	   << endl;
 
       start_price += step;
     }
