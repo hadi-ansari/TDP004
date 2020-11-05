@@ -9,12 +9,18 @@ Time::Time(int const h, int const m, int const s)
   :hour{h}, minute{m}, second{s}
 {}
 
-Time::Time& operator++()
+
+Time& Time::operator++()
 {
   ++second;
   return *this;
 
 }
+Time Time::operator+(int num)const
+{
+  return Time {hour, minute, second + num};
+}
+
 
 void Time::print_time()const
 {
@@ -28,16 +34,6 @@ int Time::get_minute()const
 {
   return minute;
 }
-
-
-// Time operator+(int num)
-// {
-//   Time::Time temp{hour, minute, second + num};
-//   return temp;
-// }
-
-
-
 std::string Time::get_string()const
 {
   std::string time{};

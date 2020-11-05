@@ -21,6 +21,8 @@ TEST_CASE("TEST2")
 TEST_CASE( "Minute test" )
 {
   Time t1{23, 59, 59};
-  Time t2{++t1};
+  Time t2{t1 + 1};
   REQUIRE( t2.get_string() == "23:59:60");
 }
+
+

@@ -7,12 +7,15 @@ class Time
 {
  public:
   Time(int const h, int const m, int const s);
+  
   Time& operator++();
+  Time operator+(int num)const;
+  
   void print_time()const;
   int get_hour()const;
   int get_minute()const;
   std::string get_string()const;
-  /* Time operator+(int num); */
+  
    
  private:
   int hour{};
