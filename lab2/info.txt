@@ -1,0 +1,19 @@
+============================================================
+Steg 1 (Göras en gång i början)
+============================================================
+För att kompilera en .o fil skriver man:
+
+w++17 -c test_main.cc
+
+============================================================
+Steg 2
+============================================================
+After att man har har skapat en .o filr, kör man kommandot nedan för att kompilera
+filerna med testen:
+
+w++17 test_main.o time_test.cc Time.cc
+
+============================================================
+Steg 3
+============================================================
+Som resultat av steg 2(om allt har gått som den ska och inga kompileringfel uppstår) får man en a.out fil. Genom att köra den med "./a.out" ser man hur många test gjordes respektive resultat på testet.

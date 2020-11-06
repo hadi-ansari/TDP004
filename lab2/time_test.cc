@@ -25,4 +25,30 @@ TEST_CASE( "Minute test" )
   REQUIRE( t2.get_string() == "23:59:60");
 }
 
+TEST_CASE( "Hour validity test" )
+{
+  Time t1{24, 0, 0};
+  REQUIRE( t1.is_valied() == false );
+}
+TEST_CASE( "Minute validity test" )
+{
+  Time t1{12, 61, 59};
+  REQUIRE( t1.is_valied() == false );
+}
+TEST_CASE( "Second validity test" )
+{
+  Time t1{6, 37, 78};
+  REQUIRE( t1.is_valied() == false );
+}
+
+TEST_CASE( "To string test1" )
+{
+  Time t1{11, 37, 23};
+  REQUIRE( t1.to_string() == "11:37:23 am" );
+}
+TEST_CASE( "To string test2" )
+{
+  Time t1{15, 0, 4};
+  REQUIRE( t1.to_string() == "03:00:04 pm" );
+}
 
