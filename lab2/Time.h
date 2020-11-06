@@ -9,15 +9,17 @@ class Time
   Time(int const h, int const m, int const s);
 
 
-  bool is_valied()const;
-  std::string to_string()const;
+  bool is_valid()const;
+  void fix_time();
+  std::string to_string(bool time_24 = false)const;
   
-  Time& operator++();
+  Time operator-(int num)const;
   Time operator+(int num)const;
+  Time& operator++();
+
   
   int get_hour()const;
   int get_minute()const;
-  std::string get_string()const;
   
    
  private:

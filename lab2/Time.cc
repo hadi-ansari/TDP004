@@ -1,6 +1,8 @@
 // I denna fil läggs definitionerna (implementationen) av de funktioner
 // som deklarerats i Time.h
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <string>
 
 #include "Time.h"
@@ -10,7 +12,7 @@ Time::Time(int const h, int const m, int const s)
 {}
 
 
-bool Time::is_valied()const
+bool Time::is_valid()const
 {
   if(hour < 24 && minute < 60 && second < 60 )
     {
@@ -18,58 +20,97 @@ bool Time::is_valied()const
     }
   return false;
 }
-std::string Time::to_string()const
+void Time::fix_time()
+{
+  if(second >= 60)
+    {
+      minute += second / 60;
+      second = second % 60;
+      if(minute >= 60)
+	{
+	  hour += minute / 60;
+	  minute = minute % 60;
+	  if(hour >= 24)
+	    {
+	      hour = hour % 24;
+  	    }
+
+	}
+    }
+}
+std::string Time::to_string(bool time_24 )const
 {
   std::string time{};
   std::string min{};
   std::string sec{};
-  
-  if(minute < 10)
-    {
-      min = '0' + std::to_string(minute); 
-    }
-  else
-    {
-      min = std::to_string(minute);
-    }
+  std::stringstream ss;
 
-  if(second < 10)
+  ss << std::setw(2) << std::setfill('0') << minute;
+      min = ss.str();
+      ss.str("");
+
+      ss << std::setw(2) << std::setfill('0') << second;
+      sec = ss.str();
+      ss.str("");
+      
+  if(time_24)
     {
-      sec = '0' + std::to_string(second);
+     ss << std::setw(2) << std::setfill('0') << hour;
+     std::string temp_h{};
+     temp_h = ss.str();
+     ss.str("");
+     time = temp_h + ':';
+     time += min + ':';
+     time += sec;
     }
   else
     {
-      sec = std::to_string(second);
-    }
-  
-  time = ':' + min + ':' + sec;
-  
-  if(hour < 12)
-    {
-      std::string temp{};
-      temp = '0' + std::to_string(hour);
-      time.insert( 0, temp );
-      time += " am";
-    }
-  else
-    {
-      time.insert( 0, std::to_string(hour % 12) );
-      time += " pm";      
+      time = ':' + min + ':' + sec;
+      if(hour < 12)
+	{
+	  ss << std::setw(2) << std::setfill('0') << hour;
+	  time.insert( 0,  ss.str());
+	  time += " am";
+	}
+      else if(hour == 12)
+	{
+	  time.insert(0, "12");
+	  time += " pm";
+	}
+      else
+	{
+	  ss << std::setw(2) << std::setfill('0') << (hour % 12);
+	  time.insert( 0, ss.str());
+	  time += " pm";      
+	}
     }
   return time;
 }
 
-
+Time Time::operator+(int num)const
+{
+  Time temp{hour, minute, second + num};
+  if(!temp.is_valid())
+    {
+      temp.fix_time();
+    }
+  return temp;
+}
+Time Time::operator-(int num)const
+{
+  return Time {hour, minute, second - num};
+}
 Time& Time::operator++()
 {
   ++second;
+  if(!is_valid())
+    {
+      fix_time();
+    }
   return *this;
 
 }
-Time Time::operator+(int num)const
-{
-  return Time {hour, minute, second + num};
-}
+
 
 int Time::get_hour()const
 {
@@ -79,20 +120,3 @@ int Time::get_minute()const
 {
   return minute;
 }
-std::string Time::get_string()const
-{
-  std::string time{};
-  time = std::to_string(hour) + ":";
-  time += std::to_string(minute) + ":";
-  time += std::to_string(second);
-  return time;
-
-}
-
-
- // int i{1};
- //  stringstream ss;
- //  ss << setw(2) << setfill('0') << i;
- //  string s{ss.str()};
- //  ss.str("");
- 

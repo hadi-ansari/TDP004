@@ -18,37 +18,83 @@ TEST_CASE("TEST2")
   Time t{12, 10, 16};
   REQUIRE( t.get_minute() == 10);
 }
-TEST_CASE( "Minute test" )
-{
-  Time t1{23, 59, 59};
-  Time t2{t1 + 1};
-  REQUIRE( t2.get_string() == "23:59:60");
-}
 
 TEST_CASE( "Hour validity test" )
 {
   Time t1{24, 0, 0};
-  REQUIRE( t1.is_valied() == false );
+  REQUIRE( t1.is_valid() == false );
 }
 TEST_CASE( "Minute validity test" )
 {
   Time t1{12, 61, 59};
-  REQUIRE( t1.is_valied() == false );
+  REQUIRE( t1.is_valid() == false );
 }
 TEST_CASE( "Second validity test" )
 {
   Time t1{6, 37, 78};
-  REQUIRE( t1.is_valied() == false );
+  REQUIRE( t1.is_valid() == false );
 }
 
-TEST_CASE( "To string test1" )
+TEST_CASE( " Am/pm format test1" )
 {
   Time t1{11, 37, 23};
-  REQUIRE( t1.to_string() == "11:37:23 am" );
+  REQUIRE( t1.to_string(false) == "11:37:23 am" );
 }
-TEST_CASE( "To string test2" )
+TEST_CASE( "Am/pm format test2" )
 {
   Time t1{15, 0, 4};
-  REQUIRE( t1.to_string() == "03:00:04 pm" );
+  REQUIRE( t1.to_string(false) == "03:00:04 pm" );
+}
+TEST_CASE( "Am/pm format test3" )
+{
+  Time t1{12, 0, 0};
+  REQUIRE( t1.to_string(false) == "12:00:00 pm" );
+}
+TEST_CASE( "24 format test1" )
+{
+  Time t1{15, 0, 4};
+  REQUIRE( t1.to_string(true) == "15:00:04" );
+}
+TEST_CASE( "24 format test2" )
+{
+  Time t1{1, 1, 0};
+  REQUIRE( t1.to_string(true) == "01:01:00" );
+}
+TEST_CASE( "Operator+ test1" )
+{
+  Time t1{13, 59, 0};
+  Time t2{t1 + 5};
+  REQUIRE( t2.to_string(false) == "01:59:05 pm" );
+}
+TEST_CASE( "Operator+ test2" )
+{
+  Time t1{1, 3, 55};
+  Time t2{t1 + 20};
+  REQUIRE( t2.to_string(false) == "01:04:15 am" );
+}
+TEST_CASE( "Operator+ test3" )
+{
+  Time t1{12, 3, 0};
+  Time t2{t1 + 100};
+  REQUIRE( t2.to_string(false) == "12:04:40 pm" );
 }
 
+TEST_CASE( "Increment test1" )
+{
+  Time t1{15, 10, 14};
+  ++t1;
+  REQUIRE( t1.to_string(true) == "15:10:15" );
+}
+TEST_CASE( "Increment test2" )
+{
+  Time t1{23, 59, 59};
+  ++t1;
+  REQUIRE( t1.to_string(false) == "00:00:00 am" );
+}
+TEST_CASE( "Increment test3" )
+{
+  Time t1{23, 59, 59};
+  ++t1;
+  ++t1;
+  REQUIRE( t1.to_string(false) == "00:00:01 am" );
+}
