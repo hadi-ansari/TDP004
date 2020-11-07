@@ -143,6 +143,26 @@ Time Time::operator++(int)
     }
   return temp;
 }
+Time& Time::operator--()
+{
+  --second;
+  if(!is_valid())
+    {
+      fix_time();
+    }
+  return *this;
+
+}
+Time Time::operator--(int)
+{
+  Time temp{*this};
+  --second;
+  if(!is_valid())
+    {
+      fix_time();
+    }
+  return temp;
+}
 
 int Time::get_hour()const
 {

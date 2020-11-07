@@ -17,6 +17,8 @@ class Time
   Time operator+(int num)const;
   Time& operator++();
   Time operator++(int);
+  Time& operator--();
+  Time operator--(int);
   
   int get_hour()const;
   int get_minute()const;

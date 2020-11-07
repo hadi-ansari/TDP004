@@ -148,5 +148,29 @@ TEST_CASE( "Increment postfix test2" )
 {
   Time t1{12, 6, 23};
   Time t2{t1++};
-  REQUIRE( t2.to_string(true) == "12:06:24" );
+  REQUIRE( t2.to_string(true) == "12:06:23" );
+}
+TEST_CASE( "Decrement prefix test1" )
+{
+  Time t1{21, 32, 3};
+  --t1;
+  REQUIRE( t1.to_string(true) == "21:32:02" );
+}
+TEST_CASE( "Decrement prefix test2" )
+{
+  Time t1{21, 32, 21};
+  Time t2{--t1};
+  REQUIRE( t2.to_string(true) == "21:32:20" );
+}
+TEST_CASE( "Decrement postfix test1" )
+{
+  Time t1{00, 10, 1};
+  t1--;
+  REQUIRE( t1.to_string(true) == "00:10:00" );
+}
+TEST_CASE( "Decrement postfix test2" )
+{
+  Time t1{00, 10, 1};
+  Time t2{t1--};
+  REQUIRE( t2.to_string(true) == "00:10:01" );
 }
