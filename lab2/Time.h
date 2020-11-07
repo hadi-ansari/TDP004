@@ -6,7 +6,7 @@
 class Time
 {
  public:
-  Time(int const h, int const m, int const s);
+  Time(int const h = 0, int const m = 0, int const s = 0);
 
 
   bool is_valid()const;
@@ -16,7 +16,7 @@ class Time
   Time operator-(int num)const;
   Time operator+(int num)const;
   Time& operator++();
-
+  Time operator++(int);
   
   int get_hour()const;
   int get_minute()const;

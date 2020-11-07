@@ -4,17 +4,21 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <cstdlib>
 
 #include "Time.h"
 
 Time::Time(int const h, int const m, int const s)
   :hour{h}, minute{m}, second{s}
-{}
+{
+}
 
 
 bool Time::is_valid()const
 {
-  if(hour < 24 && minute < 60 && second < 60 )
+  if ( hour < 24 && hour >= 0
+     && minute < 60 &&  minute >= 0
+     && second < 60 && second >= 0 )
     {
       return true;
     }
@@ -22,21 +26,35 @@ bool Time::is_valid()const
 }
 void Time::fix_time()
 {
-  if(second >= 60)
+  int temp{};
+  
+  if( second < 0)
     {
-      minute += second / 60;
-      second = second % 60;
-      if(minute >= 60)
-	{
-	  hour += minute / 60;
-	  minute = minute % 60;
-	  if(hour >= 24)
-	    {
-	      hour = hour % 24;
-  	    }
-
-	}
+      temp = ( abs(second) + 59 ) / 60;
+      temp = temp * (-1);
     }
+  else
+    {
+      temp = second / 60;
+    }
+  second = std::abs(second + 60) % 60;
+  minute = minute + temp;
+  temp = 0;
+
+   if( minute < 0)
+    {
+      temp = ( abs(minute) + 59 ) / 60;
+      temp = temp * (-1);
+    }
+  else
+    {
+      temp = minute / 60;
+    }
+  minute = std::abs(minute + 60) % 60;
+  hour = hour + temp;
+  
+  hour = std::abs(hour + 24) % 24;
+  
 }
 std::string Time::to_string(bool time_24 )const
 {
@@ -98,7 +116,12 @@ Time Time::operator+(int num)const
 }
 Time Time::operator-(int num)const
 {
-  return Time {hour, minute, second - num};
+  Time temp{hour, minute, second - num};
+  if(!temp.is_valid())
+    {
+      temp.fix_time();
+    }
+  return temp;
 }
 Time& Time::operator++()
 {
@@ -110,7 +133,16 @@ Time& Time::operator++()
   return *this;
 
 }
-
+Time Time::operator++(int)
+{
+  Time temp{*this};
+  ++second;
+  if(!is_valid())
+    {
+      fix_time();
+    }
+  return temp;
+}
 
 int Time::get_hour()const
 {
