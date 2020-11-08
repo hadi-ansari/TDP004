@@ -163,6 +163,65 @@ Time Time::operator--(int)
     }
   return temp;
 }
+bool Time::operator>(Time const& t)
+{
+  int lhs_sum_of_seconds{};
+  int rhs_sum_of_seconds{};
+    
+  lhs_sum_of_seconds = hour*3600 + minute*60 + second;
+  rhs_sum_of_seconds = t.get_hour()*3600 + t.get_minute()*60 + t.get_second();
+  
+  if(lhs_sum_of_seconds > rhs_sum_of_seconds)
+    {
+      return true;      
+    }
+  return false;
+}
+bool Time::operator<(Time const& t)
+{
+  int lhs_sum_of_seconds{};
+  int rhs_sum_of_seconds{};
+    
+  lhs_sum_of_seconds = hour*3600 + minute*60 + second;
+  rhs_sum_of_seconds = t.get_hour()*3600 + t.get_minute()*60 + t.get_second();
+  
+  if(lhs_sum_of_seconds < rhs_sum_of_seconds)
+    {
+      return true;      
+    }
+  return false;
+
+}
+bool Time::operator!=(Time const& t)
+{
+  int lhs_sum_of_seconds{};
+  int rhs_sum_of_seconds{};
+
+  lhs_sum_of_seconds = hour*3600 + minute*60 + second;
+  rhs_sum_of_seconds = t.get_hour()*3600 + t.get_minute()*60 + t.get_second();
+
+  if(lhs_sum_of_seconds != rhs_sum_of_seconds)
+    {
+      return true;      
+    }
+  return false;
+  
+}
+bool Time::operator==(Time const& t)
+{
+  int lhs_sum_of_seconds{};
+  int rhs_sum_of_seconds{};
+
+  lhs_sum_of_seconds = hour*3600 + minute*60 + second;
+  rhs_sum_of_seconds = t.get_hour()*3600 + t.get_minute()*60 + t.get_second();
+
+  if(lhs_sum_of_seconds == rhs_sum_of_seconds)
+    {
+      return true;      
+    }
+  return false;
+  
+}
 
 int Time::get_hour()const
 {
@@ -172,3 +231,30 @@ int Time::get_minute()const
 {
   return minute;
 }
+int Time::get_second()const
+{
+  return second;
+}
+
+std::istream& operator>>(std::istream & lhs, Time & rhs)
+{
+  do
+    {
+      lhs >> rhs.hour >> rhs.minute >> rhs.second;
+      if(!rhs.is_valid())
+	{
+	  std::cerr << "Felaktig inmatning!" << std::endl;
+	}
+    }
+  while(!rhs.is_valid());
+  return lhs;
+}
+
+
+std::ostream& operator<<(std::ostream & lhs, Time const& rhs)
+{
+  lhs << rhs.to_string();
+  return lhs;
+}
+
+

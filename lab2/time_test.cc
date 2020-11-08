@@ -1,3 +1,5 @@
+#include <iostream> 
+
 #include "catch.hpp"
 #include "Time.h"
 // här lägger ni era testfall. 
@@ -53,124 +55,186 @@ TEST_CASE( "Negativ value for hour" )
 TEST_CASE( " Am/pm format test1" )
 {
   Time t1{11, 37, 23};
-  REQUIRE( t1.to_string() == "11:37:23 am" );
+  REQUIRE( t1.to_string(false) == "11:37:23 am" );
 }
 TEST_CASE( "Am/pm format test2" )
 {
   Time t1{15, 0, 4};
-  REQUIRE( t1.to_string() == "03:00:04 pm" );
+  REQUIRE( t1.to_string(false) == "03:00:04 pm" );
 }
 TEST_CASE( "Am/pm format test3" )
 {
   Time t1{12, 0, 0};
-  REQUIRE( t1.to_string() == "12:00:00 pm" );
+  REQUIRE( t1.to_string(false) == "12:00:00 pm" );
 }
 TEST_CASE( "24 format test1" )
 {
   Time t1{15, 0, 4};
-  REQUIRE( t1.to_string(true) == "15:00:04" );
+  REQUIRE( t1.to_string() == "15:00:04" );
 }
 TEST_CASE( "24 format test2" )
 {
   Time t1{1, 1, 0};
-  REQUIRE( t1.to_string(true) == "01:01:00" );
+  REQUIRE( t1.to_string() == "01:01:00" );
 }
 TEST_CASE( "Operator+ test1" )
 {
   Time t1{13, 59, 0};
   Time t2{t1 + 5};
-  REQUIRE( t2.to_string() == "01:59:05 pm" );
+  REQUIRE( t2.to_string() == "13:59:05" );
 }
 TEST_CASE( "Operator+ test2" )
 {
   Time t1{1, 3, 55};
   Time t2{t1 + 20};
-  REQUIRE( t2.to_string() == "01:04:15 am" );
+  REQUIRE( t2.to_string() == "01:04:15" );
 }
 TEST_CASE( "Operator+ test3" )
 {
   Time t1{12, 3, 0};
   Time t2{t1 + 100};
-  REQUIRE( t2.to_string() == "12:04:40 pm" );
+  REQUIRE( t2.to_string() == "12:04:40" );
 }
 
 TEST_CASE( "Operator- test1" )
 {
   Time t1{13, 23, 55};
   Time t2{t1 - 1};
-  REQUIRE( t2.to_string() == "01:23:54 pm" );
+  REQUIRE( t2.to_string() == "13:23:54" );
 }
 TEST_CASE( "Operator- test2" )
 {
   Time t1{9, 13, 0};
   Time t2{t1 - 1};
-  REQUIRE( t2.to_string() == "09:12:59 am" );
+  REQUIRE( t2.to_string() == "09:12:59" );
 }
 TEST_CASE( "Operator- test3" )
 {
   Time t1{9, 0, 0};
   Time t2{t1 - 1};
-  REQUIRE( t2.to_string() == "08:59:59 am" );
+  REQUIRE( t2.to_string() == "08:59:59" );
 }
 TEST_CASE( "Operator- test4" )
 {
   Time t1{0, 0, 0};
   Time t2{t1 - 1};
-  REQUIRE( t2.to_string() == "11:59:59 pm" );
+  REQUIRE( t2.to_string() == "23:59:59" );
 }
 
 TEST_CASE( "Increment prefix test1" )
 {
   Time t1{15, 10, 14};
   ++t1;
-  REQUIRE( t1.to_string(true) == "15:10:15" );
+  REQUIRE( t1.to_string() == "15:10:15" );
 }
 TEST_CASE( "Increment prefix test2" )
 {
   Time t1{23, 59, 59};
   ++t1;
-  REQUIRE( t1.to_string() == "00:00:00 am" );
+  REQUIRE( t1.to_string() == "00:00:00" );
 }
 TEST_CASE( "Increment prefix test3" )
 {
   Time t1{23, 59, 59};
   ++t1;
   ++t1;
-  REQUIRE( t1.to_string() == "00:00:01 am" );
+  REQUIRE( t1.to_string() == "00:00:01" );
 }
 TEST_CASE( "Increment postfix test1" )
 {
   Time t1{12, 6, 23};
   t1++;
-  REQUIRE( t1.to_string(true) == "12:06:24" );
+  REQUIRE( t1.to_string() == "12:06:24" );
 }
 TEST_CASE( "Increment postfix test2" )
 {
   Time t1{12, 6, 23};
   Time t2{t1++};
-  REQUIRE( t2.to_string(true) == "12:06:23" );
+  REQUIRE( t2.to_string() == "12:06:23" );
 }
 TEST_CASE( "Decrement prefix test1" )
 {
   Time t1{21, 32, 3};
   --t1;
-  REQUIRE( t1.to_string(true) == "21:32:02" );
+  REQUIRE( t1.to_string() == "21:32:02" );
 }
 TEST_CASE( "Decrement prefix test2" )
 {
   Time t1{21, 32, 21};
   Time t2{--t1};
-  REQUIRE( t2.to_string(true) == "21:32:20" );
+  REQUIRE( t2.to_string() == "21:32:20" );
 }
 TEST_CASE( "Decrement postfix test1" )
 {
   Time t1{00, 10, 1};
   t1--;
-  REQUIRE( t1.to_string(true) == "00:10:00" );
+  REQUIRE( t1.to_string() == "00:10:00" );
 }
 TEST_CASE( "Decrement postfix test2" )
 {
   Time t1{00, 10, 1};
   Time t2{t1--};
-  REQUIRE( t2.to_string(true) == "00:10:01" );
+  REQUIRE( t2.to_string() == "00:10:01" );
 }
+
+TEST_CASE( "Comparison test1" )
+{
+  Time t1{0, 0, 1};
+  Time t2{12, 30, 40};
+  REQUIRE( (t1 > t2) == false );
+}
+TEST_CASE( "Comparison test2" )
+{
+  Time t1{12, 32, 59};
+  Time t2{12, 31, 59};
+  REQUIRE( (t1 > t2) == true );
+}
+TEST_CASE( "Comparison test3" )
+{
+  Time t1{23, 2, 49};
+  Time t2{22, 50, 56};
+  REQUIRE( (t1 < t2) == false );
+}
+TEST_CASE( "Comparison test4" )
+{
+  Time t1{0, 0, 0};
+  Time t2{0, 0, 1};
+  REQUIRE( (t1 < t2) == true );
+}
+TEST_CASE( "Comparison test5" )
+{
+  Time t1{23, 57, 46};
+  Time t2{20, 57, 46};
+  REQUIRE( (t1 != t2) == true );
+}
+TEST_CASE( "Comparison test6" )
+{
+  Time t1{20, 7, 6};
+  Time t2{20, 7, 6};
+  REQUIRE( (t1 != t2) == false );
+}
+TEST_CASE( "Comparison test7" )
+{
+  Time t1{2, 17, 21};
+  Time t2{16, 5, 23};
+  REQUIRE( (t1 == t2) == false );
+}
+TEST_CASE( "Comparison test8" )
+{
+  Time t1{14, 1, 31};
+  Time t2{14, 1, 31};
+  REQUIRE( (t1 == t2) == true );
+}
+// How to test iostream operators????
+// TEST_CASE( "Ostream test1" )
+// {
+//   Time t1{17, 50, 28};
+//   std::cout << t1 << std::endl;
+//   REQUIRE( true );
+// }
+// TEST_CASE( "Istream test1" )
+// {
+//   Time t1{};
+//   std::cin >> t1;
+//   REQUIRE( true );
+// }
