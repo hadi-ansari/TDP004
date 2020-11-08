@@ -1,6 +1,7 @@
 // I denna fil läggs definitionerna (implementationen) av de funktioner
 // som deklarerats i Time.h
 #include <iostream>
+#include <ios>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -238,15 +239,16 @@ int Time::get_second()const
 
 std::istream& operator>>(std::istream & lhs, Time & rhs)
 {
-  do
+
+  lhs >> rhs.hour >> rhs.minute >> rhs.second;
+  if(!rhs.is_valid())
     {
-      lhs >> rhs.hour >> rhs.minute >> rhs.second;
-      if(!rhs.is_valid())
-	{
-	  std::cerr << "Felaktig inmatning!" << std::endl;
-	}
+     lhs.setstate(std::ios::failbit);
     }
-  while(!rhs.is_valid());
+  if(lhs.fail())
+    {
+      std::cerr << "Fel" << std::endl;
+    }
   return lhs;
 }
 

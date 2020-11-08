@@ -232,9 +232,9 @@ TEST_CASE( "Comparison test8" )
 //   std::cout << t1 << std::endl;
 //   REQUIRE( true );
 // }
-// TEST_CASE( "Istream test1" )
-// {
-//   Time t1{};
-//   std::cin >> t1;
-//   REQUIRE( true );
-// }
+TEST_CASE( "Istream test1" )
+{
+  Time t1{};
+  std::cin >> t1;
+  REQUIRE( t1.to_string() == "00:73:00" );
+}
