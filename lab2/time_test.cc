@@ -17,7 +17,7 @@ TEST_CASE( "Test constructor" )
 }
 TEST_CASE( "Test empty-constructor" )
 {
-  Time t{0, 0, 0};
+  Time t{};
   REQUIRE( t.to_string() == "00:00:00");
 }
 TEST_CASE("TEST2")
@@ -266,6 +266,15 @@ TEST_CASE( "Input test1" )
 {
   Time t1{12, 3, 5};
   std::istringstream in;
-  in >> t1; 
-  REQUIRE( in.str() == "12:00:12" );
+  in.str("12 23 12");
+  in >> t1;
+  REQUIRE( t1.to_string() == "12:23:12" );
+}
+TEST_CASE( "Input test2" )
+{
+  Time t1{};
+  std::istringstream in;
+  in.str("25 23 24");
+  in >> t1;
+  REQUIRE( in.fail() == true );
 }

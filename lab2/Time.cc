@@ -30,35 +30,36 @@ bool Time::is_valid()const
 //            skulle dem bli betydligt mindre komplexa och lättare att förstå.
 void Time::fix_time()
 {
-  int temp{};
-  
-  if( second < 0)
+  if(is_valid() == false)
     {
-      temp = ( abs(second) + 59 ) / 60;
-      temp = temp * (-1);
+      int temp{};
+      
+      if( second < 0)
+	{
+	  temp = ( abs(second) + 59 ) / 60;
+	  temp = temp * (-1);
+	}
+      else
+	{
+	  temp = second / 60;
+	}
+      second = std::abs(second + 60) % 60;
+      minute = minute + temp;
+      temp = 0;
+      
+      if( minute < 0)
+	{
+	  temp = ( abs(minute) + 59 ) / 60;
+	  temp = temp * (-1);
+	}
+      else
+	{
+	  temp = minute / 60;
+	}
+      minute = std::abs(minute + 60) % 60;
+      hour = hour + temp;
+      hour = std::abs(hour + 24) % 24;
     }
-  else
-    {
-      temp = second / 60;
-    }
-  second = std::abs(second + 60) % 60;
-  minute = minute + temp;
-  temp = 0;
-
-   if( minute < 0)
-    {
-      temp = ( abs(minute) + 59 ) / 60;
-      temp = temp * (-1);
-    }
-  else
-    {
-      temp = minute / 60;
-    }
-  minute = std::abs(minute + 60) % 60;
-  hour = hour + temp;
-  
-  hour = std::abs(hour + 24) % 24;
-  
 }
 // Komplettering: Fundera lite på vad som egentligen behöver hanteras i detta fall.
 //                Vad är det som skiljer fallen 24h, am och pm? 
@@ -99,59 +100,46 @@ std::string Time::to_string(bool time_24 )const
 Time Time::operator+(int num)const
 {
   Time temp{hour, minute, second + num};
-  if(!temp.is_valid())
-    {
-      temp.fix_time();
-    }
+  
+  temp.fix_time();
   return temp;
 }
 Time Time::operator-(int num)const
 {
   Time temp{hour, minute, second - num};
-  if(!temp.is_valid())
-    {
-      temp.fix_time();
-    }
+
+  temp.fix_time();
   return temp;
 }
 Time& Time::operator++()
 {
   ++second;
-  if(!is_valid())
-    {
-      fix_time();
-    }
+  
+  fix_time();
   return *this;
 
 }
 Time Time::operator++(int)
 {
   Time temp{*this};
+
   ++second;
-  if(!is_valid())
-    {
-      fix_time();
-    }
+  fix_time();
   return temp;
 }
 Time& Time::operator--()
 {
   --second;
-  if(!is_valid())
-    {
-      fix_time();
-    }
+  fix_time();
   return *this;
 
 }
 Time Time::operator--(int)
 {
   Time temp{*this};
+
   --second;
-  if(!is_valid())
-    {
-      fix_time();
-    }
+  fix_time();
   return temp;
 }
 bool Time::operator==(Time const& t)const
@@ -239,7 +227,7 @@ std::istream& operator>>(std::istream & lhs, Time & rhs)
   if(!rhs.is_valid())
     {
      lhs.setstate(std::ios::failbit);
-     // rhs modiferas med en orimlig heltal (med tanken på att
+     // Hadi && Nils: rhs modiferas med en orimlig heltal (med tanken på att
      // användaren endast matar in heltal )  "men" sedan valideras den med if-sats och
      // om värden inte är rimliga heltal får all variabler en nolla som default-värde
      rhs.hour = 0;
