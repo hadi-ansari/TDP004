@@ -128,12 +128,7 @@ TEST_CASE( "Remove three item from a list with four item " )
 }
 
 
-// Solve one TEST_CASE or WHEN at a time!
-//
-// Move this comment and following #if 0 down one case at a time!
-// Make sure to close any open braces before this comment.
-// The #if 0 will disable the rest of the file.
-#if 0
+
 
 
 SCENARIO( "Empty lists" ) 
@@ -149,27 +144,37 @@ SCENARIO( "Empty lists" )
 	WHEN( "an item is inserted" )
 	{
 
-	    // insert an item
+	  l.insert(5); // insert an item
       
 	    THEN( "the size increase and the item is first in the list" )
 	    {
-		REQUIRE( l.is_empty()  );
-		REQUIRE( l.size() == 0 );
-		REQUIRE( /* test that item is first in list */ );
+		REQUIRE( !l.is_empty()  );
+		REQUIRE( l.size() == 1 );
+		REQUIRE( l.get_first_element() == 5 ); /* test that item is first in list */
 	    }
 	}
-    
+
+
 	WHEN( "an item is removed" )
 	{
 
-	    // remove an item
+	  // remove an item
+	  l.remove(13);
       
 	    THEN( "the list is still empty" )
 	    {
-		// add your REQUIRE statements
+	        REQUIRE( l.is_empty()  );
+		REQUIRE( l.size() == 0 );
 	    }
 	}
-    
+    }
+}
+// Solve one TEST_CASE or WHEN at a time!
+//
+// Move this comment and following #if 0 down one case at a time!
+// Make sure to close any open braces before this comment.
+// The #if 0 will disable the rest of the file.
+#if 0
 	WHEN( "the list is copied to a new list" )
 	{
 

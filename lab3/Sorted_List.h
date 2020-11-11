@@ -17,5 +17,6 @@ private:
   void insert(int v);
   void insert_node( Node* & ptr, int v);
   void remove(int v);
+  int get_first_element()const;
 };
 #endif

@@ -91,3 +91,8 @@ void Sorted_List::remove(int v)
       current = current -> next;
     }
 }
+
+int Sorted_List::get_first_element()const
+{
+  return first -> value;
+}
