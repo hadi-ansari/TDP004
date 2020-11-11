@@ -15,6 +15,11 @@ TEST_CASE( "Test constructor" )
   Time t{12, 10, 16};
   REQUIRE( t.get_hour() == 12);
 }
+TEST_CASE( "Test empty-constructor" )
+{
+  Time t{0, 0, 0};
+  REQUIRE( t.to_string() == "00:00:00");
+}
 TEST_CASE("TEST2")
 {
   Time t{12, 10, 16};
@@ -225,16 +230,42 @@ TEST_CASE( "Comparison test8" )
   Time t2{14, 1, 31};
   REQUIRE( (t1 == t2) == true );
 }
-// How to test iostream operators????
-// TEST_CASE( "Ostream test1" )
-// {
-//   Time t1{17, 50, 28};
-//   std::cout << t1 << std::endl;
-//   REQUIRE( true );
-// }
-TEST_CASE( "Istream test1" )
+TEST_CASE( "Comparison test9" )
 {
-  Time t1{};
-  std::cin >> t1;
-  REQUIRE( t1.to_string() == "00:73:00" );
+  Time t1{14, 1, 31};
+  Time t2{14, 1, 31};
+  REQUIRE( (t1 >= t2) == true );
+}
+TEST_CASE( "Comparison test10" )
+{
+  Time t1{13, 1, 30};
+  Time t2{14, 1, 30};
+  REQUIRE( (t1 >= t2) == false );
+}
+TEST_CASE( "Comparison test11" )
+{
+  Time t1{16, 24, 1};
+  Time t2{16, 24, 1};
+  REQUIRE( (t1 <= t2) == true );
+}
+TEST_CASE( "Comparison test12" )
+{
+  Time t1{2, 0, 33};
+  Time t2{1, 0, 55};
+  REQUIRE( (t1 <= t2) == false );
+}
+// How to test iostream operators????
+TEST_CASE( "Output test1" )
+{
+  Time t1{17, 50, 28};
+  std::ostringstream out;
+  out << t1;
+  REQUIRE( out.str() == "17:50:28" );
+}
+TEST_CASE( "Input test1" )
+{
+  Time t1{12, 3, 5};
+  std::istringstream in;
+  in >> t1; 
+  REQUIRE( in.str() == "12:00:12" );
 }
