@@ -17,6 +17,18 @@ Sorted_List::Sorted_List()
 Sorted_List::Sorted_List(int v)
   : first{new Node{ nullptr, v}}
 {}
+// Copy constructor
+Sorted_List::Sorted_List(Sorted_List const& rhs)
+{
+  if(rhs.first != nullptr)
+    {
+      first = new Node{*rhs.first};
+    }
+  else
+    {
+      first = rhs.first;
+    }
+}
 
 bool Sorted_List::is_empty()const
 {

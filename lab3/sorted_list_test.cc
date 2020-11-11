@@ -167,6 +167,19 @@ SCENARIO( "Empty lists" )
 		REQUIRE( l.size() == 0 );
 	    }
 	}
+
+	WHEN( "the list is copied to a new list" )
+	{
+
+	    // copy your list to a new variable (copy constructor)
+	  Sorted_List l2{l};
+	    THEN( "the new list is also empty" )
+	    {
+		// add your REQUIRE statements
+	      REQUIRE( l2.is_empty()  );
+	      REQUIRE( l2.size() == 0 );
+	    }
+	}
     }
 }
 // Solve one TEST_CASE or WHEN at a time!
@@ -175,17 +188,6 @@ SCENARIO( "Empty lists" )
 // Make sure to close any open braces before this comment.
 // The #if 0 will disable the rest of the file.
 #if 0
-	WHEN( "the list is copied to a new list" )
-	{
-
-	    // copy your list to a new variable (copy constructor)
-      
-	    THEN( "the new list is also empty" )
-	    {
-		// add your REQUIRE statements
-	    }
-	}
-    
 	WHEN( "the list is copied to an existing non-empty list" )
 	{
 	    // create and fill a list to act as the existing list

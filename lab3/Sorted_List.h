@@ -10,6 +10,7 @@ private:
  public:
   Sorted_List();
   Sorted_List(int);
+  Sorted_List(Sorted_List const&);
 
   bool is_empty()const;
   int size()const;
