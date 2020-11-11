@@ -14,7 +14,7 @@
 
 #include <random>
 
-#include "Sorted_List.cc"
+#include "Sorted_List.h"
 //=======================================================================
 // Test cases
 //=======================================================================
@@ -27,6 +27,57 @@ TEST_CASE( "Create an empty list" )
     REQUIRE( l.size() == 0 );
 }
 
+TEST_CASE( "Create a list with one node" ) 
+{
+    Sorted_List l{5};
+
+    REQUIRE( !l.is_empty() );
+    REQUIRE( l.size() == 1);
+}
+
+TEST_CASE( "Insert an item in an empty list" ) 
+{
+    Sorted_List l{};
+
+    l.insert(5);
+    REQUIRE( !l.is_empty() );
+    REQUIRE( l.size() == 1 );
+  
+}
+TEST_CASE( "Insert two item in an empty list" ) 
+{
+    Sorted_List l{};
+
+    l.insert(5);
+    l.insert(3);
+    REQUIRE( !l.is_empty() );
+    REQUIRE( l.size() == 2 );
+  
+}
+TEST_CASE( "Insert three item in an empty list" ) 
+{
+    Sorted_List l{};
+
+    l.insert(5);
+    l.insert(3);
+    l.insert(1);
+    REQUIRE( !l.is_empty() );
+    REQUIRE( l.size() == 3 );
+  
+}
+TEST_CASE( "Insert four item in an empty list" ) 
+{
+    Sorted_List l{};
+
+    l.insert(5);
+    l.insert(3);
+    l.insert(1);
+    l.insert(13);
+    REQUIRE( !l.is_empty() );
+    REQUIRE( l.size() == 4 );
+  
+}
+
 // Solve one TEST_CASE or WHEN at a time!
 //
 // Move this comment and following #if 0 down one case at a time!
@@ -34,16 +85,6 @@ TEST_CASE( "Create an empty list" )
 // The #if 0 will disable the rest of the file.
 #if 0
 
-TEST_CASE( "Insert an item in an empty list" ) 
-{
-    Sorted_List l{};
-
-    l.insert(5);
-  
-    REQUIRE( l.is_empty() );
-    REQUIRE( l.size() == 0 );
-  
-}
 
 SCENARIO( "Empty lists" ) 
 {

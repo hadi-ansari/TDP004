@@ -3,13 +3,18 @@
 
 class Sorted_List
 {
+private:
+  struct Node;
+  Node* first{};
+  
  public:
   Sorted_List();
   Sorted_List(int);
 
-  // void insert(int v);
- private:
-  struct Node{};
-  Node* first{};
+  bool is_empty()const;
+  int size()const;
+  void print()const;
+  void insert(int v);
+  void insert_node( Node* & ptr, int v);
 };
 #endif
