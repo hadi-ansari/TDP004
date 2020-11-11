@@ -1,12 +1,30 @@
-#include <iostrem>
+#include <iostream>
 
-#include "List.h"
+#include "Sorted_List.h"
 
-List::List(int v)
+List::Sorted_List()
+  : first{nullptr}
+{}
+List::Sorted_List(int v)
   : first{new Node{nullptr, v}}
 {}
 
-struct List::Node
+void List::insert(int v)
+{
+  
+  if( first == nullptr || first -> value > v)
+    {
+      first = new Node{nullptr, v};
+    }
+  else
+    {
+      List::insert(first -> next);
+    }
+  
+  
+}
+
+struct Sorted_List::Node
 {
 public:
   Time::Node(Node* ptr, int v)
