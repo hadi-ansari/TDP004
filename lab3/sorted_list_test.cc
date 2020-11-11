@@ -78,6 +78,56 @@ TEST_CASE( "Insert four item in an empty list" )
   
 }
 
+TEST_CASE( "Remove one item from a list with one item" ) 
+{
+    Sorted_List l{};
+
+    l.insert(5);
+    l.remove(5);
+    REQUIRE( l.is_empty() );
+    REQUIRE( l.size() == 0 );
+  
+}
+TEST_CASE( "Remove one item from a list with two item " ) 
+{
+    Sorted_List l{};
+
+    l.insert(3);
+    l.insert(1);
+    l.remove(3);
+    REQUIRE( !l.is_empty() );
+    REQUIRE( l.size() == 1 );
+  
+}
+TEST_CASE( "Remove two item from a list with two item " ) 
+{
+    Sorted_List l{};
+
+    l.insert(3);
+    l.insert(1);
+    l.remove(1);
+    l.remove(3);
+    REQUIRE( l.is_empty() );
+    REQUIRE( l.size() == 0 );
+  
+}
+TEST_CASE( "Remove three item from a list with four item " ) 
+{
+    Sorted_List l{};
+
+    l.insert(3);
+    l.insert(1);
+    l.insert(12);
+    l.insert(4);
+    l.remove(1);
+    l.remove(3);
+    l.remove(4);
+    REQUIRE( !l.is_empty() );
+    REQUIRE( l.size() == 1 );
+  
+}
+
+
 // Solve one TEST_CASE or WHEN at a time!
 //
 // Move this comment and following #if 0 down one case at a time!

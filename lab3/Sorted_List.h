@@ -16,5 +16,6 @@ private:
   void print()const;
   void insert(int v);
   void insert_node( Node* & ptr, int v);
+  void remove(int v);
 };
 #endif

@@ -68,4 +68,26 @@ void Sorted_List::insert_node(Node* & ptr, int v)
     }
   
 }
-
+void Sorted_List::remove(int v)
+{
+  Node* current{first};
+  Node* previous{first};
+  
+  while(current != nullptr)
+    {
+      if(first -> value == v)
+	{
+	  first = current -> next;
+	  delete current;
+	  break;
+	}
+      else if(current -> value == v)
+	{
+	  previous -> next = current -> next;
+	  delete current;
+	  break;
+	}
+      previous = current;
+      current = current -> next;
+    }
+}
