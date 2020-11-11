@@ -76,21 +76,25 @@ std::string Time::to_string(bool time_24 )const
    
   if(time_24)
     {
-      ss << std::setw(2) << hour << ':' << std::setw(2) << minute << ':' << std::setw(2) << second;
+      ss << std::setw(2) << hour << ':' << std::setw(2) << minute << ':'
+	 << std::setw(2) << second;
     }
   else
     {
       if(hour < 12)
 	{
-	  ss << std::setw(2) << hour << ':' << std::setw(2) << minute << ':' << std::setw(2) << second << " am";
+	  ss << std::setw(2) << hour << ':' << std::setw(2) << minute
+	     << ':' << std::setw(2) << second << " am";
 	}
       else if(hour == 12)
 	{
-	  ss << std::setw(2) << hour << ':' << std::setw(2) << minute << ':' << std::setw(2) << second << " pm";
+	  ss << std::setw(2) << hour << ':' << std::setw(2) << minute
+	     << ':' << std::setw(2) << second << " pm";
 	}
       else
 	{
-	  ss << std::setw(2) << (hour % 12) << ':' << std::setw(2) << minute << ':' << std::setw(2) << second << " pm";
+	  ss << std::setw(2) << (hour % 12) << ':' << std::setw(2) << minute
+	     << ':' << std::setw(2) << second << " pm";
 	}
     }
 
@@ -222,8 +226,8 @@ int Time::get_second()const
 std::istream& operator>>(std::istream & lhs, Time & rhs)
 {
 // Komplettering: Modifiera inte rhs innan ni är säkra på att datat i lhs resulterar i en korrekt tid.
-  Time temp{};
-  lhs >> rhs.hour >> rhs.minute >> rhs.second;
+  char trash{};
+  lhs >> rhs.hour >> trash >> rhs.minute >> trash >> rhs.second;
   if(!rhs.is_valid())
     {
      lhs.setstate(std::ios::failbit);

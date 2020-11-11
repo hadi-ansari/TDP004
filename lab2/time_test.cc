@@ -264,9 +264,9 @@ TEST_CASE( "Output test1" )
 }
 TEST_CASE( "Input test1" )
 {
-  Time t1{12, 3, 5};
+  Time t1{};
   std::istringstream in;
-  in.str("12 23 12");
+  in.str("12:23:12");
   in >> t1;
   REQUIRE( t1.to_string() == "12:23:12" );
 }
