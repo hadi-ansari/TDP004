@@ -180,28 +180,31 @@ SCENARIO( "Empty lists" )
 	      REQUIRE( l2.size() == 0 );
 	    }
 	}
-    }
-}
-// Solve one TEST_CASE or WHEN at a time!
-//
-// Move this comment and following #if 0 down one case at a time!
-// Make sure to close any open braces before this comment.
-// The #if 0 will disable the rest of the file.
-#if 0
+
 	WHEN( "the list is copied to an existing non-empty list" )
 	{
 	    // create and fill a list to act as the existing list
 	    // copy (assign) your empty list to the existing
-      
+	  Sorted_List l2{};
+	  l2.insert(34);
+	  l2 = l;
 	    THEN( "the existing list is also empty" )
 	    {
 		// add your REQUIRE statements
+	      REQUIRE( l2.is_empty()  );
+	      REQUIRE( l2.size() == 0 );
 	    }
       
 	}
     }
 }
 
+// Solve one TEST_CASE or WHEN at a time!
+//
+// Move this comment and following #if 0 down one case at a time!
+// Make sure to close any open braces before this comment.
+// The #if 0 will disable the rest of the file.
+#if 0
 SCENARIO( "Single item lists" )
 {
 

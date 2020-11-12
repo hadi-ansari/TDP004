@@ -20,15 +20,36 @@ Sorted_List::Sorted_List(int v)
 // Copy constructor
 Sorted_List::Sorted_List(Sorted_List const& rhs)
 {
-  if(rhs.first != nullptr)
-    {
-      first = new Node{*rhs.first};
-    }
-  else
-    {
-      first = rhs.first;
-    }
+  // Node* current_rhs{rhs.first};
+
+  // while(current_rhs != nullptr)
+  //   {
+  //     insert(current_rhs -> value);
+  //     current_rhs = current_rhs -> next;
+  //   }
+  *this = rhs;
 }
+Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
+ {
+   Node* current{first};
+   Node* current_rhs{rhs.first};
+   //   Node* previous_rhs{rhs.first};
+   
+   while(current != nullptr)
+     {
+       Node* temp{current};
+       
+       current = current -> next;
+       remove(temp -> value);
+     }
+   while(current_rhs != nullptr)
+     {
+       insert(current_rhs -> value);
+       current_rhs = current_rhs -> next; 
+     }
+   
+   return *this;
+ }
 
 bool Sorted_List::is_empty()const
 {
