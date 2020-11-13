@@ -19,6 +19,8 @@ private:
   void print()const;
   void insert(int v);
   void remove(int v);
-  int get_first_element()const;
+  int get_value(int const )const;
+  int get_first_value()const;
+  int get_last_value()const;
 };
 #endif

@@ -26,13 +26,21 @@ TEST_CASE( "Create an empty list" )
     REQUIRE( l.is_empty() );
     REQUIRE( l.size() == 0 );
 }
+// TEST_CASE( "Create an empty list and try to get first element" ) 
+// {
+//     Sorted_List l{};
 
+//     REQUIRE( l.get_first_value() == 0 );
+// }
 TEST_CASE( "Create a list with one node" ) 
 {
     Sorted_List l{5};
 
     REQUIRE( !l.is_empty() );
     REQUIRE( l.size() == 1);
+    // Tests that the only item in the list is both first and last item in the list
+    REQUIRE( l.get_first_value() == 5);
+    REQUIRE( l.get_last_value() == 5);	
 }
 
 TEST_CASE( "Insert an item in an empty list" ) 
@@ -150,7 +158,7 @@ SCENARIO( "Empty lists" )
 	    {
 		REQUIRE( !l.is_empty()  );
 		REQUIRE( l.size() == 1 );
-		REQUIRE( l.get_first_element() == 5 ); /* test that item is first in list */
+		REQUIRE( l.get_first_value() == 5 ); /* test that item is first in list */
 	    }
 	}
 
@@ -199,52 +207,101 @@ SCENARIO( "Empty lists" )
     }
 }
 
-// Solve one TEST_CASE or WHEN at a time!
-//
-// Move this comment and following #if 0 down one case at a time!
-// Make sure to close any open braces before this comment.
-// The #if 0 will disable the rest of the file.
-#if 0
+
 SCENARIO( "Single item lists" )
 {
 
     GIVEN( "A list with one item in it" )
     {
 
-	// create the given scenario
-    
+      // create the given scenario
+      Sorted_List l{20};
+      
+      REQUIRE( !l.is_empty() );
+      REQUIRE( l.size() == 1 );
+      REQUIRE( l.get_first_value() == 20 );
+      
 	WHEN( "a smaller item is inserted" )
 	{
-	    THEN( /* describe what will happen */ )
+	  l.insert(15);
+	    THEN( "the size increase and smaller item is first in the list")
 	    {
+	       REQUIRE( !l.is_empty() );
+	       REQUIRE( l.size() == 2 );
+	       REQUIRE( l.get_first_value() == 15 );
 	    }
 	}
+
 	WHEN( "a larger item is inserted" )
 	{
-	    THEN( /* describe what will happen */ )
+	  l.insert(35);
+	  
+	    THEN( "The size increase and the smaller item still is first in the list" )
 	    {
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.size() == 2 );
+	      REQUIRE( l.get_first_value() == 20 );
 	    }
 	}
+
 	WHEN( "an item is removed" )
 	{
-	    THEN( /* describe what will happen */ )
+	  l.remove(20);
+	  
+	    THEN("The list is empty")
 	    {
+	      REQUIRE( l.is_empty() );
+	      REQUIRE( l.size() == 0 );
 	    }
 	}
+	WHEN( "Trying to remove an item that is not in the list" )
+	{
+	  l.remove(65);
+	  
+	    THEN("The does not change and has one item in it")
+	    {
+	      REQUIRE( l.get_first_value() == 20 );
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.size() == 1 );
+	    }
+	}
+
 	WHEN( "the list is copied to a new list" )
 	{
-	    THEN( /* describe what will happen */ )
+	  Sorted_List l2{l};
+	  
+	    THEN( "new list has also one item same as original one " )
 	    {
+	      REQUIRE( l2.get_first_value() == 20 );
+	      REQUIRE( !l2.is_empty() );
+	      REQUIRE( l2.size() == 1 );
 	    }
 	}
+
 	WHEN( "the list is copied to an existing non-empty list" )
 	{
-	    THEN( /* describe what will happen */ )
+	  // Create a new list with two different items in it
+	  Sorted_List l2{};
+	  
+	  l2.insert(109);
+	  l2.insert(88);
+	  
+	  REQUIRE( l2.get_first_value() == 88 );
+	  REQUIRE( !l2.is_empty() );
+	  REQUIRE( l2.size() == 2 );
+	  
+	  l2 = l;
+	  
+	    THEN( "The non-empty list has one item same as original one" )
 	    {
+	      REQUIRE( l2.get_first_value() == 20 );
+	      REQUIRE( !l2.is_empty() );
+	      REQUIRE( l2.size() == 1 );
 	    }
 	}
     }
 }
+
 
 SCENARIO( "Multi-item lists" )
 {
@@ -254,25 +311,97 @@ SCENARIO( "Multi-item lists" )
 
 	// create the given scenario and all THEN statements
 	// and all REQUIRE statements
+      Sorted_List l{};
+      l.insert(9);
+      l.insert(12);
+      l.insert(26);
+      l.insert(5);
+      l.insert(17);
+      // Sorted list is: 5 9 12 17 26 
+      
+      REQUIRE( l.get_first_value() == 5 );
+      REQUIRE( !l.is_empty() );
+      REQUIRE( l.size() == 5 );
     
 	WHEN( "an item smaller than all other is inserted" )
 	{
+	  l.insert(3);
+	  
+	  THEN("The new added item is first in the list and size increase with one")
+	    {
+	      REQUIRE( l.get_first_value() == 3 );
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.size() == 6 );
+	    }
 	}
+
 	WHEN( "an item larger than all other is inserted" )
 	{
+	  l.insert(235);
+	  THEN("Size increase and last item is the inserted item")
+	    {
+	      REQUIRE( l.get_last_value() == 235 );
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.size() == 6 );	      
+	    }
 	}
+
 	WHEN( "an item smaller than all but one item is inserted" )
 	{
+	  l.insert(7);
+	  
+	  THEN(" second item is the inserted item and size increase ")
+	    {
+	      REQUIRE( l.get_first_value() == 5 );
+	      // Zero indexing (get_value(1) refers to second item)
+	      REQUIRE( l.get_value(1) == 7 );
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.size() == 6 );	      
+	    }
 	}
 	WHEN( "an item larger than all but one item is inserted" )
 	{
+	  l.insert(21);
+	  
+	  THEN( "second last item is the inserted item and size increase" )
+	    {
+	      REQUIRE( l.get_last_value() == 26 );
+	      REQUIRE( l.get_value(4) == 21 );
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.size() == 6 );
+	    }
 	}
 	WHEN( "an item is removed" )
 	{
+	  l.remove(12);
+	   THEN( "Size decrease and list has four item" )
+	    {
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.size() == 4 );
+	    }
 	}
 	WHEN( "all items are removed" )
 	{
+	  l.remove(17);
+	  l.remove(5);
+	  l.remove(9);
+	  l.remove(26);
+	  l.remove(12);
+	   THEN( "The list is empty" )
+	    {
+	      REQUIRE( l.is_empty() );
+	      REQUIRE( l.size() == 0 );
+	    }
 	}
+    }
+}
+
+// Solve one TEST_CASE or WHEN at a time!
+//
+// Move this comment and following #if 0 down one case at a time!
+// Make sure to close any open braces before this comment.
+// The #if 0 will disable the rest of the file.
+#if 0
 	WHEN( "the list is copied to a new list" )
 	{
 	}

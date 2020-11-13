@@ -124,8 +124,36 @@ void Sorted_List::remove(int v)
       current = current -> next;
     }
 }
-
-int Sorted_List::get_first_element()const
+int Sorted_List::get_value(int const index)const
 {
+  Node* current{first};
+  
+  for(int i{0}; i < size() ; ++i)
+    {
+      if (i == index)
+	{
+	  return current -> value;
+	}
+      current = current -> next;
+    }
+
+  return 0;
+
+}
+
+int Sorted_List::get_first_value()const
+{
+
   return first -> value;
+
+}
+int Sorted_List::get_last_value()const
+{
+  Node* current{first};
+  while(current -> next != nullptr)
+    {
+      current = current -> next;
+    }
+  
+  return current -> value;;
 }
