@@ -1,1 +1,2 @@
 w++17 test_main.o sorted_list_test.cc Sorted_List.cc 
+valgrind --tool=memcheck --leak-check=yes ./a.out

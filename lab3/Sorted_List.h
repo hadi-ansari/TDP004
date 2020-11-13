@@ -13,12 +13,15 @@ private:
   Sorted_List(int);
   Sorted_List(Sorted_List const&);
   Sorted_List& operator=(Sorted_List const&);
-
+  ~Sorted_List();
+  void del(Node* &);
+  
   bool is_empty()const;
   int size()const;
   void print()const;
   void insert(int v);
   void remove(int v);
+  
   int get_value(int const )const;
   int get_first_value()const;
   int get_last_value()const;

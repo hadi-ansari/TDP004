@@ -393,20 +393,38 @@ SCENARIO( "Multi-item lists" )
 	      REQUIRE( l.size() == 0 );
 	    }
 	}
-    }
-}
-
-// Solve one TEST_CASE or WHEN at a time!
-//
-// Move this comment and following #if 0 down one case at a time!
-// Make sure to close any open braces before this comment.
-// The #if 0 will disable the rest of the file.
-#if 0
 	WHEN( "the list is copied to a new list" )
 	{
+	  Sorted_List l2{l};
+
+	  THEN( "new list has a copy of original list with five items " )
+	    {
+	      REQUIRE( !l2.is_empty() );
+	      REQUIRE( l2.size() == 5 );
+	    }
 	}
-	WHEN( "the list is copied to an existing non-empty list" )
+	WHEN( "the list is copied to an existing list" )
 	{
+	  Sorted_List l2{l};
+
+	  THEN( "new list has a copy of original list with five items " )
+	    {
+	      REQUIRE( !l2.is_empty() );
+	      REQUIRE( l2.size() == 5 );
+	    }
+	}
+ 	WHEN( "the list is copied to an existing non-empty list" )
+	{
+	  Sorted_List l2{3};
+	  
+	  l2.insert(24);
+	  l2 = l;
+	  
+	  THEN( "new list has a copy of original list with five items " )
+	    {
+	      REQUIRE( !l2.is_empty() );
+	      REQUIRE( l2.size() == 5 );
+	    }
 	}
     }
 }
@@ -416,49 +434,90 @@ SCENARIO( "Lists can be copied" )
 
     GIVEN( "A list with five items in it, and a new copy of that list" )
     {
-
-	WHEN( "the original list is changed" )
+      Sorted_List l{};
+      
+      l.insert(9);
+      l.insert(4);
+      l.insert(56);
+      l.insert(19);
+      l.insert(34);
+      
+      Sorted_List l2 {l};
+      
+      REQUIRE( !l.is_empty() );
+      REQUIRE( l.get_first_value() == 4 );
+      REQUIRE( l.get_last_value() == 56 );
+      REQUIRE( l.size() == 5 );
+      
+      WHEN( "the original list is changed (removing first item) " )
 	{
-	    THEN( "the copy remain unmodified" )
+	  l.remove(4);
+	  
+	  THEN( "the copy remain unmodified (first item in copy is 5)" )
 	    {
+	      //Size decrease for l but l2 still has 5 items in it.
+
+		  REQUIRE( l2.get_first_value() == 4 );
+		  REQUIRE( !l2.is_empty() );
+		  REQUIRE( l2.size() == 5 );
+		  REQUIRE( l.size() == 4 );
 	    }
 	}
-
 	WHEN( "the copied list is changed" )
 	{
+	  l2.remove(4);
+	  
 	    THEN( "the original remain unmodified" )
 	    {
+	      REQUIRE( l.get_first_value() == 4 );
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.size() == 5 );
+	      REQUIRE( l2.size() == 4 );
 	    }
 	}
     }
 }
 
+
 SCENARIO( "Lists can be heavily used" )
 {
 
-    GIVEN( "A list with 1000 random items in it" )
+    GIVEN( "A list with 2000 random items in it" )
     {
-    
-	// create the given list with 1000 random items
-	std::random_device rd;
-	std::uniform_int_distribution<int> uniform(1,1000);
-    
-	for (int i{0}; i < 1000; ++i)
+      Sorted_List l{};
+      // create the given list with 1000 random items
+      std::random_device rd;
+      std::uniform_int_distribution<int> uniform(1,1000);
+      
+      for (int i{0}; i < 2000; ++i)
 	{
-	    int random { uniform(rd) }; // generate a random number
-	    // insert into list
+	  int random { uniform(rd) }; // generate a random number
+	  // insert into list
+	  l.insert(random);
 	}
-    
-	WHEN( "the list have 1000 random numbers inserted" )
+       WHEN( "the list have 2000 random numbers inserted" )
 	{
-	    // THEN the list have 2000 items in correct order
-	    // (assumes unique inserts or duplicates allowed)
+	  // THEN the list have 2000 items in correct order
+	  // (assumes unique inserts or duplicates allowed)
+	  THEN( "the list have 2000 items in correct order " )
+	    {
+	      
+	      
+	    }
 	}
-
-	WHEN( "the list have 2000 random numbers removed" )
+    }
+}
+// Solve one TEST_CASE or WHEN at a time!
+//
+// Move this comment and following #if 0 down one case at a time!
+// Make sure to close any open braces before this comment.
+// The #if 0 will disable the rest of the file.
+#if 0
+      
+      WHEN( "the list have 2000 random numbers removed" )
 	{
-	    // THEN the list is empty
-	    // (assumes successful removes)
+	  // THEN the list is empty
+	  // (assumes successful removes)
 	}
     }
 }
@@ -480,9 +539,9 @@ SCENARIO( "Lists can be passed to functions" )
   
 	WHEN( "the list is passed to trigger_move()" )
 	{
-
+	  //std::move(given)
 	    Sorted_List l{ trigger_move(given) };
-      
+	    
 	    THEN( "the given list remain and the result have the change" )
 	    {
 	    }

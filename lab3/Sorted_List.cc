@@ -19,14 +19,9 @@ Sorted_List::Sorted_List(int v)
 {}
 // Copy constructor
 Sorted_List::Sorted_List(Sorted_List const& rhs)
+  :first{nullptr}
 {
-  // Node* current_rhs{rhs.first};
 
-  // while(current_rhs != nullptr)
-  //   {
-  //     insert(current_rhs -> value);
-  //     current_rhs = current_rhs -> next;
-  //   }
   *this = rhs;
 }
 Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
@@ -50,6 +45,29 @@ Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
    
    return *this;
  }
+
+Sorted_List::~Sorted_List()
+{
+  del(first);
+}
+void Sorted_List::del(Node* &ptr)
+{
+  if(ptr != nullptr)
+    {
+      if(ptr -> next == nullptr)
+	{
+	  delete ptr;
+	  ptr = nullptr;
+	}
+      else
+	{
+	  del(ptr -> next);
+	  delete ptr;
+	  ptr = nullptr;
+	  
+	}
+    }
+}
 
 bool Sorted_List::is_empty()const
 {
@@ -157,3 +175,9 @@ int Sorted_List::get_last_value()const
   
   return current -> value;;
 }
+
+//Sorted_List l0{2};
+//Sorted_List l1{std::move(l0)};
+//
+//#include <algorithm>
+//std::swap(frist, rhs.first)

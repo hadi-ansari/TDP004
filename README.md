@@ -18,8 +18,7 @@
 │   ├── a.out
 │   ├── catch.hpp
 │   ├── info.txt
-│   ├── List.cc
-│   ├── list_test.cc
+│   ├── main.cc
 │   ├── Sorted_List.cc
 │   ├── Sorted_List.h
 │   ├── sorted_list_test.cc
@@ -27,4 +26,4 @@
 │   └── test_main.o
 └── README.md
 
-4 directories, 23 files
+4 directories, 22 files
