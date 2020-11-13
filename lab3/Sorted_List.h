@@ -21,6 +21,8 @@ private:
   void print()const;
   void insert(int v);
   void remove(int v);
+  std::string to_string()const;
+  bool check_order()const;
   
   int get_value(int const )const;
   int get_first_value()const;

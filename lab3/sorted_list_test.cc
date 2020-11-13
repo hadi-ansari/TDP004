@@ -400,17 +400,20 @@ SCENARIO( "Multi-item lists" )
 	  THEN( "new list has a copy of original list with five items " )
 	    {
 	      REQUIRE( !l2.is_empty() );
+	      REQUIRE( l2.to_string() == "5 9 12 17 26" );
 	      REQUIRE( l2.size() == 5 );
 	    }
 	}
 	WHEN( "the list is copied to an existing list" )
 	{
-	  Sorted_List l2{l};
+	  Sorted_List l2{};
+	  l2 = l;
 
 	  THEN( "new list has a copy of original list with five items " )
 	    {
 	      REQUIRE( !l2.is_empty() );
 	      REQUIRE( l2.size() == 5 );
+	      REQUIRE( l2.to_string() == "5 9 12 17 26" );
 	    }
 	}
  	WHEN( "the list is copied to an existing non-empty list" )
@@ -424,6 +427,7 @@ SCENARIO( "Multi-item lists" )
 	    {
 	      REQUIRE( !l2.is_empty() );
 	      REQUIRE( l2.size() == 5 );
+	      REQUIRE( l2.to_string() == "5 9 12 17 26");
 	    }
 	}
     }
@@ -482,31 +486,51 @@ SCENARIO( "Lists can be copied" )
 SCENARIO( "Lists can be heavily used" )
 {
 
-    GIVEN( "A list with 2000 random items in it" )
+    GIVEN( "A list with 1000 random items in it" )
     {
       Sorted_List l{};
       // create the given list with 1000 random items
       std::random_device rd;
       std::uniform_int_distribution<int> uniform(1,1000);
       
-      for (int i{0}; i < 2000; ++i)
+      for (int i{0}; i < 1000; ++i)
 	{
 	  int random { uniform(rd) }; // generate a random number
 	  // insert into list
 	  l.insert(random);
 	}
-       WHEN( "the list have 2000 random numbers inserted" )
+       WHEN( "the list have 1000 random numbers inserted" )
 	{
-	  // THEN the list have 2000 items in correct order
+	  // THEN the list have 1000 items in correct order
 	  // (assumes unique inserts or duplicates allowed)
-	  THEN( "the list have 2000 items in correct order " )
+	  THEN( "the list have 1000 items in correct order " )
 	    {
 	      
-	      
+	      REQUIRE( l.check_order() == true );
+	      REQUIRE( l.size() == 1000 );
 	    }
+	}
+
+      WHEN( "the list have 1000 random numbers removed" )
+	{
+	  while(l.size() != 0)
+	    {
+	      int temp{l.get_first_value()};
+	      l.remove(temp);
+	    }
+	  
+	  THEN( "the list have 1000 items in correct order " )
+	    {
+	      REQUIRE( l.is_empty() );
+	      REQUIRE( l.size() == 0 );
+	    }
+	  // THEN the list is empty
+	  // (assumes successful removes)
 	}
     }
 }
+
+
 // Solve one TEST_CASE or WHEN at a time!
 //
 // Move this comment and following #if 0 down one case at a time!
@@ -514,14 +538,6 @@ SCENARIO( "Lists can be heavily used" )
 // The #if 0 will disable the rest of the file.
 #if 0
       
-      WHEN( "the list have 2000 random numbers removed" )
-	{
-	  // THEN the list is empty
-	  // (assumes successful removes)
-	}
-    }
-}
-
 Sorted_List trigger_move(Sorted_List l)
 {
     // do some (any) modification to list

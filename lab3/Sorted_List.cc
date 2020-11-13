@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include "Sorted_List.h"
 
@@ -142,6 +143,46 @@ void Sorted_List::remove(int v)
       current = current -> next;
     }
 }
+std::string Sorted_List::to_string()const
+{
+  std::string str{""};
+  Node* current{first};
+  
+  while(current != nullptr)
+    {
+      str += std::to_string(current -> value);
+      if(current -> next != nullptr)
+	{
+	  str += ' ';
+	}
+      current = current -> next;
+    }
+  
+  return str;
+}
+bool Sorted_List::check_order()const
+{
+  if(size() > 1)
+    {
+      Node* previous{first -> next};
+      Node* current{first -> next -> next};
+      
+      while(current != nullptr)
+	{
+	  if(previous -> value > current -> value)
+	    {
+	      return false;
+	    }
+	  current = current -> next;
+	  previous = previous -> next;
+	}
+    }
+  return true;
+
+  
+  
+}
+
 int Sorted_List::get_value(int const index)const
 {
   Node* current{first};
