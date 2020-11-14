@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include "Sorted_List.h"
 
@@ -8,6 +9,7 @@ struct Sorted_List::Node
   Node(Node* ptr, int v)
     : value{v}, next{ptr}
   {}
+  
   int value{};
   Node* next{};
 };
@@ -15,22 +17,22 @@ struct Sorted_List::Node
 Sorted_List::Sorted_List()
   : first{nullptr}
 {}
-Sorted_List::Sorted_List(int v)
+Sorted_List::Sorted_List(int const v)
   : first{new Node{ nullptr, v}}
 {}
-// Copy constructor
+
+// Copy constructor and operator
 Sorted_List::Sorted_List(Sorted_List const& rhs)
   :first{nullptr}
 {
-
   *this = rhs;
 }
 Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
  {
    Node* current{first};
    Node* current_rhs{rhs.first};
-   //   Node* previous_rhs{rhs.first};
    
+   // removing all items in lhs list if it is not empty
    while(current != nullptr)
      {
        Node* temp{current};
@@ -38,6 +40,8 @@ Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
        current = current -> next;
        remove(temp -> value);
      }
+   
+   // (Deep) Copying items from rhs to lhs which is empty now 
    while(current_rhs != nullptr)
      {
        insert(current_rhs -> value);
@@ -47,29 +51,106 @@ Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
    return *this;
  }
 
+// Move constructor and operator
+Sorted_List::Sorted_List(Sorted_List && rhs)
+{
+  *this = std::move(rhs);
+}
+Sorted_List& Sorted_List::operator=(Sorted_List && rhs)
+{
+  std::swap(first, rhs.first);
+  rhs.~Sorted_List(); /* calling rhs destructor explicitly */
+  return *this;
+}
+
+// Destructor
 Sorted_List::~Sorted_List()
 {
   del(first);
+  first = nullptr;
 }
-void Sorted_List::del(Node* &ptr)
+void Sorted_List::del(Node* ptr)
 {
   if(ptr != nullptr)
     {
       if(ptr -> next == nullptr)
 	{
 	  delete ptr;
-	  ptr = nullptr;
 	}
       else
 	{
 	  del(ptr -> next);
 	  delete ptr;
-	  ptr = nullptr;
-	  
-	}
+      	}
     }
 }
 
+void Sorted_List::insert(int const v)
+{
+  insert_node(first, v);
+}
+// Recursive insert function
+void Sorted_List::insert_node(Node* & ptr, int v)
+{
+  if(ptr == nullptr)
+    {
+      ptr = new Node{nullptr, v};
+    }
+  else if(ptr -> value > v)
+    {
+      Node* temp{new Node{ptr, v}};
+      ptr = temp;
+    }
+  else
+    {
+      insert_node(ptr -> next, v);
+    }
+  
+}
+// Iterative insert function
+void Sorted_List::remove(int const v)
+{
+  Node* current{first};
+  Node* previous{first};
+  
+  while(current != nullptr)
+    {
+      if(first -> value == v)
+  	{
+  	  first = current -> next;
+  	  delete current;
+  	  break;
+  	}
+      else if(current -> value == v)
+  	{
+  	  previous -> next = current -> next;
+  	  delete current;
+  	  break;
+  	}
+      previous = current;
+      current = current -> next;
+    }
+}
+std::string Sorted_List::to_string()const
+{
+  std::string str{""};
+  Node* current{first};
+  
+  while(current != nullptr)
+    {
+      str += std::to_string(current -> value);
+      if(current -> next != nullptr)
+	{
+	  str += ' ';
+	}
+      current = current -> next;
+    }  
+  return str;
+}
+void Sorted_List::print()const
+{
+  std::cout << Sorted_List::to_string() << std::endl;
+}
 bool Sorted_List::is_empty()const
 {
   if(first == nullptr)
@@ -89,77 +170,7 @@ int Sorted_List::size()const
     }
   return counter;
 }
-void Sorted_List::print()const
-{
-  Node* current{first};
-  while(current != nullptr)
-    {
-      std::cout << current -> value << " ";
-      current = current -> next;
-    }
-  std::cout << std::endl;
-}
-void Sorted_List::insert(int v)
-{
-  insert_node(first, v);
-}
-void Sorted_List::insert_node(Node* & ptr, int v)
-{
-  if(ptr == nullptr)
-    {
-      ptr = new Node{nullptr, v};
-    }
-  else if(ptr -> value > v)
-    {
-      Node* temp{new Node{ptr, v}};
-      ptr = temp;
-    }
-  else
-    {
-      insert_node(ptr -> next, v);
-    }
-  
-}
-void Sorted_List::remove(int v)
-{
-  Node* current{first};
-  Node* previous{first};
-  
-  while(current != nullptr)
-    {
-      if(first -> value == v)
-	{
-	  first = current -> next;
-	  delete current;
-	  break;
-	}
-      else if(current -> value == v)
-	{
-	  previous -> next = current -> next;
-	  delete current;
-	  break;
-	}
-      previous = current;
-      current = current -> next;
-    }
-}
-std::string Sorted_List::to_string()const
-{
-  std::string str{""};
-  Node* current{first};
-  
-  while(current != nullptr)
-    {
-      str += std::to_string(current -> value);
-      if(current -> next != nullptr)
-	{
-	  str += ' ';
-	}
-      current = current -> next;
-    }
-  
-  return str;
-}
+
 bool Sorted_List::check_order()const
 {
   if(size() > 1)
@@ -178,9 +189,6 @@ bool Sorted_List::check_order()const
 	}
     }
   return true;
-
-  
-  
 }
 
 int Sorted_List::get_value(int const index)const
@@ -196,15 +204,12 @@ int Sorted_List::get_value(int const index)const
       current = current -> next;
     }
 
-  return 0;
-
+  return -1;
 }
 
 int Sorted_List::get_first_value()const
 {
-
   return first -> value;
-
 }
 int Sorted_List::get_last_value()const
 {
@@ -213,12 +218,5 @@ int Sorted_List::get_last_value()const
     {
       current = current -> next;
     }
-  
   return current -> value;;
 }
-
-//Sorted_List l0{2};
-//Sorted_List l1{std::move(l0)};
-//
-//#include <algorithm>
-//std::swap(frist, rhs.first)

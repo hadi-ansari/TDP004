@@ -13,6 +13,7 @@
 #include "catch.hpp"
 
 #include <random>
+#include <iostream>
 
 #include "Sorted_List.h"
 //=======================================================================
@@ -26,12 +27,7 @@ TEST_CASE( "Create an empty list" )
     REQUIRE( l.is_empty() );
     REQUIRE( l.size() == 0 );
 }
-// TEST_CASE( "Create an empty list and try to get first element" ) 
-// {
-//     Sorted_List l{};
 
-//     REQUIRE( l.get_first_value() == 0 );
-// }
 TEST_CASE( "Create a list with one node" ) 
 {
     Sorted_List l{5};
@@ -40,8 +36,9 @@ TEST_CASE( "Create a list with one node" )
     REQUIRE( l.size() == 1);
     // Tests that the only item in the list is both first and last item in the list
     REQUIRE( l.get_first_value() == 5);
-    REQUIRE( l.get_last_value() == 5);	
+    REQUIRE( l.get_last_value() == 5);
 }
+
 
 TEST_CASE( "Insert an item in an empty list" ) 
 {
@@ -50,8 +47,10 @@ TEST_CASE( "Insert an item in an empty list" )
     l.insert(5);
     REQUIRE( !l.is_empty() );
     REQUIRE( l.size() == 1 );
-  
+    REQUIRE( l.get_first_value() == 5);
+    REQUIRE( l.get_last_value() == 5);	
 }
+
 TEST_CASE( "Insert two item in an empty list" ) 
 {
     Sorted_List l{};
@@ -179,11 +178,11 @@ SCENARIO( "Empty lists" )
 	WHEN( "the list is copied to a new list" )
 	{
 
-	    // copy your list to a new variable (copy constructor)
+	  // copy your list to a new variable (copy constructor)
 	  Sorted_List l2{l};
-	    THEN( "the new list is also empty" )
+	  THEN( "the new list is also empty" )
 	    {
-		// add your REQUIRE statements
+	      // add your REQUIRE statements
 	      REQUIRE( l2.is_empty()  );
 	      REQUIRE( l2.size() == 0 );
 	    }
@@ -191,14 +190,14 @@ SCENARIO( "Empty lists" )
 
 	WHEN( "the list is copied to an existing non-empty list" )
 	{
-	    // create and fill a list to act as the existing list
-	    // copy (assign) your empty list to the existing
+	  // create and fill a list to act as the existing list
+	  // copy (assign) your empty list to the existing
 	  Sorted_List l2{};
 	  l2.insert(34);
 	  l2 = l;
 	    THEN( "the existing list is also empty" )
 	    {
-		// add your REQUIRE statements
+	      // add your REQUIRE statements
 	      REQUIRE( l2.is_empty()  );
 	      REQUIRE( l2.size() == 0 );
 	    }
@@ -530,18 +529,13 @@ SCENARIO( "Lists can be heavily used" )
     }
 }
 
-
-// Solve one TEST_CASE or WHEN at a time!
-//
-// Move this comment and following #if 0 down one case at a time!
-// Make sure to close any open braces before this comment.
-// The #if 0 will disable the rest of the file.
-#if 0
       
 Sorted_List trigger_move(Sorted_List l)
 {
-    // do some (any) modification to list
-    return l;
+  // do some (any) modification to list
+  
+  l.remove(9); /* removes first item in the list */
+  return l;
 }
 
 SCENARIO( "Lists can be passed to functions" )
@@ -552,16 +546,99 @@ SCENARIO( "Lists can be passed to functions" )
 
 	Sorted_List given{};
 	// insert 5 items
-  
+	given.insert(76);
+	given.insert(9);
+	given.insert(199);
+	given.insert(41);
+	given.insert(12);
+	
 	WHEN( "the list is passed to trigger_move()" )
 	{
-	  //std::move(given)
-	    Sorted_List l{ trigger_move(given) };
+	  Sorted_List l{ trigger_move(given) };
 	    
 	    THEN( "the given list remain and the result have the change" )
 	    {
+	      REQUIRE( !given.is_empty() );
+	      REQUIRE( given.size() == 5 );
+	      REQUIRE( given.to_string() == "9 12 41 76 199");
+
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.get_first_value() == 12);
+	      REQUIRE( l.to_string() == "12 41 76 199" );
+	      REQUIRE( l.size() == 4 );
 	    }
 	}
+	WHEN( "the list is moved to a new empty list" )
+	{
+	  Sorted_List l{};
+	  
+	  // Test assignment move constructor
+	  l = trigger_move(given);
+	    
+	    THEN( "the given list remain and the result have the change" )
+	    {
+	      REQUIRE( !given.is_empty() );
+	      REQUIRE( given.size() == 5 );
+	      REQUIRE( given.to_string() == "9 12 41 76 199");
+
+	      REQUIRE( !l.is_empty() );
+	      REQUIRE( l.get_first_value() == 12);
+	      REQUIRE( l.to_string() == "12 41 76 199" );
+	      REQUIRE( l.size() == 4 );
+	    }
+	}
+    }
+}
+
+SCENARIO( "List can be moved to other lists" )
+{
+  GIVEN( "A list with 5 items in it" )
+    {
+      Sorted_List l{};
+      l.insert(43);
+      l.insert(298);
+      l.insert(8);
+      l.insert(29);
+      l.insert(60);
+
+      REQUIRE( l.to_string() == "8 29 43 60 298");
+      REQUIRE( l.size() == 5 );
+      
+      WHEN( "the list is moved to a new list" )
+	{
+	  Sorted_List l2{ std::move(l) };
+	  
+	  THEN( "The old list is empty and new list has 5 items" )
+	    {
+	      REQUIRE( l.is_empty() );
+	      REQUIRE( l.size() == 0 );
+	      REQUIRE( l2.to_string() == "8 29 43 60 298");
+	      REQUIRE( l2.size() == 5 );
+	    }
+	}
+
+      WHEN( "the list is moved to an existing non-empty list" )
+	{
+	  Sorted_List l2{4};
+	  l2.insert(78);
+	  
+	  REQUIRE( l2.to_string() == "4 78");
+	  REQUIRE( l2.size() == 2 );
+
+	  l2 = std::move(l);
+	  
+	  THEN( "the new list has five items same as old list and old list is empty" )
+	    {
+	      REQUIRE( l2.to_string() == "8 29 43 60 298");
+	      REQUIRE( l2.size() == 5 );
+	      
+	      REQUIRE( l.is_empty() );
+	      REQUIRE( l.size() == 0 );
+	    }
+	}
+
+
+
     }
 }
 
@@ -580,8 +657,63 @@ SCENARIO( "Lists can be passed to functions" )
 // sense also on a immutable list (eg all operations but insert):  
 void use_const_list(Sorted_List const& l)
 {
-    // perform every operation that do not modify the list here
-    return l;
+  // perform every operation that do not modify the list here
+  int first_value{};
+  int last_value{};
+  int some_value{};
+  int size{};
+
+  bool order{};
+  bool empty{};
+  
+  std::string str{};
+
+  first_value = l.get_first_value();
+  last_value = l.get_last_value();
+  some_value = l.get_value(1);
+  size = l.size();
+  order = l.check_order();
+  empty = l.is_empty();
+  str = l.to_string();
+  
+  std::cout << "First item: " << first_value << "\nLast item: "
+	    << last_value << "\nMiddle item: " << some_value
+	    << "\nList size: " << size << "\nOrder: " << std::boolalpha
+	    << order << "\nList is empty? " << empty << "\nList:\n"
+	    << str << std::endl;
 }
+
+SCENARIO( "list can be passed to functions as const list" )
+{
+  GIVEN( "A list with 3 item in it" )
+    {
+      Sorted_List l{};
+      l.insert(3);
+      l.insert(174);
+      l.insert(58);
+
+      REQUIRE( l.size() == 3 );
+      REQUIRE( l.to_string() == "3 58 174" );
+                  
+      WHEN( "List is passet to use_const_list()" )
+	{
+	  use_const_list(l);
+	  
+	  THEN( "No error occured and list is still the same" )
+	    {
+	      REQUIRE( l.size() == 3 );
+	      REQUIRE( l.to_string() == "3 58 174" );
+	    }
+	}
+
+    }
+}
+// Solve one TEST_CASE or WHEN at a time!
+//
+// Move this comment and following #if 0 down one case at a time!
+// Make sure to close any open braces before this comment.
+// The #if 0 will disable the rest of the file.
+#if 0
+
 
 #endif
