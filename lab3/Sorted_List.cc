@@ -107,7 +107,7 @@ void Sorted_List::insert_node(Node* & ptr, int v)
     }
   
 }
-// Iterative insert function
+// Iterative remove function
 void Sorted_List::remove(int const v)
 {
   Node* current{first};
