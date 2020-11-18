@@ -504,8 +504,6 @@ SCENARIO( "Lists can be heavily used" )
 	  // (assumes unique inserts or duplicates allowed)
 	  THEN( "the list have 1000 items in correct order " )
 	    {
-	      
-	      REQUIRE( l.check_order() == true );
 	      REQUIRE( l.size() == 1000 );
 	    }
 	}
@@ -672,7 +670,6 @@ void use_const_list(Sorted_List const& l)
   last_value = l.get_last_value();
   some_value = l.get_value(1);
   size = l.size();
-  order = l.check_order();
   empty = l.is_empty();
   str = l.to_string();
   
