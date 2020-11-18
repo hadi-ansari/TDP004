@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <iomanip>
 
 #include "Simulator.h"
 
@@ -86,28 +87,59 @@ double Capacitor::get_current()
 {
   return capacity * ( get_voltage() - load);
 }
-
-void simulate(std::vector<Component*> n, int number, int print, double t)
+void print(std::vector<Component*> n)
 {
-  for( int i = 0; i < number; ++i)
+  for(Component* component: n)
+    {
+      std::cout << std::fixed << std::setprecision(2) << std::setw(6) << component -> get_voltage() << std::setw(6)
+		<< component -> get_current();
+    }
+  std::cout << std::endl;
+}
+
+void simulate(std::vector<Component*> n, int iteration, int number, double t)
+{
+  int counter {0};
+  
+  for(Component* component: n)
+    {
+      std::cout << std::setw(12) << component -> name;
+    }
+  std::cout << std::endl;
+  for(Component* component: n)
+    {
+      std::cout << std::setw(6) <<"volt" << std::setw(6) << "curr";
+    }
+  std::cout << std::endl;
+  for( int i = 0; i < iteration; ++i)
     {
       for(Component* component: n)
-	{
-	  component -> simulate(t);
-	}
+  	{
+  	  component -> simulate(t);
+  	}
+      if( counter == iteration / number)
+  	{
+	  print(n);
+	  counter = 0;
+  	}
+      ++counter;
     }
 }
 
 int main()
 {
-  Connection p, n;
+  Connection p, n, R124, R23;
   std::vector <Component*> net{};
-  Battery B1{"Bat", 21, p, n};
+
   net.push_back(new Battery("Bat", 24.0, p, n));
-  net.push_back(new Ressistor{"R1", 6.0, p, n});
-  net.push_back(new Ressistor{"R2", 8.0, p, n});
-  simulate(net, 1000, 10, 0.1);
-  std::cout << "ok" << std::endl;
+  net.push_back(new Ressistor{"R1", 6.0, p, R124});
+  net.push_back(new Ressistor{"R2", 4.0, R124, R23});
+  net.push_back(new Ressistor{"R3", 8.0, R23, n});
+  net.push_back(new Ressistor{"R4", 12.0, R124, n});
+   
+
+  simulate(net, 200000, 10, 0.01);
+  // std::cout << "ok" << std::endl;
   //  std::cout << "P: " << p.charge << "\nN: " << n.charge << std::endl;
   return 0;
 }
