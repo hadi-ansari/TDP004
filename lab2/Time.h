@@ -1,30 +1,22 @@
 // Denna fil ska innehålla deklarationer för de typer och funktioner
 // som behövs
 
-// Komplettering: alla includes ska vara med innanför header guards för att 
-//                undvika försök till att dubbelinkludera. 
+// Komplettering: Funktioner som enbart består av en if(villkor) och returnerar true eller false
+//                ska returnera villkoret direkt.
 
-// Komplettering: alla funktioner som inte modifierar datamedlemmarna ska vara const.
+// Ang. to_string
+// Komplettering: Fundera lite på vad som egentligen behöver hanteras i detta fall.
+//                Vad är det som skiljer fallen 24h, am och pm? 
+//                Vad är det som egentligen behöver göras i if-satserna?
+// Forts. minuter och sekunder bör inte hanteras inuti if-satsen då dessa inte skiljer 
+//        sig mellan ampm och 24h.
 
-// Komplettering: Ni saknar operatorer för <= och >=.
-
-// Komplettering: Flytta in is_valid-checken innanför fix_time så behöver ni inte 
-//                anropa is_valid varje gång ni ska köra fix_time.
-
-// Komplettering: Alla jämförelseoperatorer ska inte vara fullt implementerade, 
-//                dvs att dem kontrollerar själva datamedlemmarna. Implementera max. 2st
-//                och använd dessa för att implementera de andra. Kom ihåg negation, !.
-
-// Komplettering: Ni testar inte input/output operatorerna. Använd istringstream/ostringstream för att testa dessa
-//                istället för cin/cout. Glöm inte att även testa input när den får fel data och att falggan sätts.
+// Komplettering: Ta en titt i inputoperatorn. / Hadi & Nils: Vi har mejlat Mladen om detta och han godkände den.
 #ifndef TIME_H
 #define TIME_H
 class Time
 {
  public:
- // Komplettering: Om användaren försöker skapa en tom Time, Time t{}, så förväntas det 
- //                det att tomkonstruktorn körs, men istället kallar den på denna konstruktor 
- //                med default värdena. Skapa istället en tomkonstruktor som default initierar tiden.
   Time(int const h, int const m, int const s);
   Time();
   

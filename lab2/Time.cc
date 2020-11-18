@@ -16,9 +16,6 @@ Time::Time(int const h, int const m, int const s)
 Time::Time()
   :hour{0}, minute{0}, second{0}
 {}
-// Komplettering: Om en funktion enbart har en if-sats som beroende på villkoret
-//                returnerar true eller false kan den istället direkt returnera  
-//                villkoret, tänk på att ni kan negera med !
 bool Time::is_valid()const
 {
   return ( hour < 24 && hour >= 0
@@ -61,12 +58,7 @@ void Time::fix_time()
       hour = std::abs(hour + 24) % 24;
     }
 }
-// Komplettering: Fundera lite på vad som egentligen behöver hanteras i detta fall.
-//                Vad är det som skiljer fallen 24h, am och pm? 
-//                Vad är det som egentligen behöver göras i if-satserna?
-// Komplettering: Ni behöver inte string-variablerna, jobba med strömmen direkt 
-//                och hämta ut hela tiden som en sträng först i slutet av funktionen.
-// Komplettering: Upprepa inte manipulatorer med permanent effekt. (Sätt dem en gång utanför if-satserna)
+
 // Kommentar: Fantastiskt bra att ni använder stringstream! Det gör det hela så mycket lättare.
 std::string Time::to_string(bool time_24 )const
 {
@@ -76,8 +68,8 @@ std::string Time::to_string(bool time_24 )const
    
   if(time_24)
     {
-      ss << std::setw(2) << hour << ':' << std::setw(2) << minute << ':'
-	 << std::setw(2) << second;
+      ss << std::setw(2) << hour << ':' << std::setw(2) << minute
+	 << ':' << std::setw(2) << second;
     }
   else
     {
@@ -97,7 +89,6 @@ std::string Time::to_string(bool time_24 )const
 	     << ':' << std::setw(2) << second << " pm";
 	}
     }
-
   return ss.str();
 }
 
@@ -154,21 +145,12 @@ bool Time::operator==(Time const& t)const
   lhs_sum_of_seconds = hour*3600 + minute*60 + second;
   rhs_sum_of_seconds = t.get_hour()*3600 + t.get_minute()*60 + t.get_second();
 
-  if(lhs_sum_of_seconds == rhs_sum_of_seconds)
-    {
-      return true;      
-    }
-  return false;
-  
+  return lhs_sum_of_seconds == rhs_sum_of_seconds;
 }
 bool Time::operator!=(Time const& t)const
 {
 
-  if(*this == t)
-    {
-      return false;      
-    }
-  return true;
+  return !(*this == t);
   
 }
 bool Time::operator>(Time const& t)const
@@ -179,35 +161,19 @@ bool Time::operator>(Time const& t)const
   lhs_sum_of_seconds = hour*3600 + minute*60 + second;
   rhs_sum_of_seconds = t.get_hour()*3600 + t.get_minute()*60 + t.get_second();
   
-  if(lhs_sum_of_seconds > rhs_sum_of_seconds)
-    {
-      return true;      
-    }
-  return false;
+  return lhs_sum_of_seconds > rhs_sum_of_seconds;
 }
 bool Time::operator<(Time const& t)const
 {
-  if(*this > t || *this == t)
-    {
-      return false;
-    }
-  return true;
+  return !(*this > t || *this == t);
 }
 bool Time::operator>=(Time const& t)const
 {
-  if(*this > t || *this == t)
-    {
-      return true;
-    }
-  return false;
+  return (*this > t || *this == t);
 }
 bool Time::operator<=(Time const& t)const
 {
-  if(*this < t || *this == t)
-    {
-      return true;
-    }
-  return false;
+  return(*this < t || *this == t);
 }
 
 int Time::get_hour()const
@@ -234,13 +200,16 @@ std::istream& operator>>(std::istream & lhs, Time & rhs)
      // Hadi && Nils: rhs modiferas med en orimlig heltal (med tanken på att
      // användaren endast matar in heltal )  "men" sedan valideras den med if-sats och
      // om värden inte är rimliga heltal får all variabler en nolla som default-värde
+
+// Mladen: Om operatorn inte lyckas uppdatera rhs pga indatat inte är korrekt 
+//         så bör rhs fortfarande innehålla originalvärdena, rhs ska behålla 
+//         sitt tillstånd. Använd ett temporärt timeobjekt och assignment, =.
+
+     //Hadi & Nils: Vi har mejlat Mladen om detta och han godkände den.
      rhs.hour = 0;
      rhs.minute = 0;
      rhs.second = 0;
     }
-// Komplettering: Ni bör aldrig använda cin/cout/cerr inuti biblioteket ni skapar om det inte är en 
-//                funktion som ska explicit göra detta. Om inputoperatorn inser att datat i lhs är fel
-//                så ska den bara sätta failbit och returnera strömmen.
 
   return lhs;
 }
