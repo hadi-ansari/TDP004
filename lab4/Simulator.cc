@@ -35,7 +35,20 @@ Ressistor::Ressistor(std::string name, double resistance, Connection& p, Connect
 
 void Ressistor::simulate(double t)
 {
-  n.charge += (p.charge - n.charge) / resistance * t;
+  double temp{};
+  if(n.charge < p.charge)
+    {
+      temp = (p.charge - n.charge) / resistance * t;
+      n.charge += temp;
+      p.charge -= temp;
+      
+    }
+  else
+    {
+      temp = (n.charge - p.charge) / resistance * t;
+      p.charge += temp;
+      n.charge -= temp;
+    }
 }
 double Ressistor::get_voltage()
 {
@@ -87,18 +100,27 @@ double Capacitor::get_current()
 {
   return capacity * ( get_voltage() - load);
 }
-void print(std::vector<Component*> n)
+
+
+
+
+void print(std::vector<Component*>& n)
 {
   for(Component* component: n)
     {
-      std::cout << std::fixed << std::setprecision(2) << std::setw(6) << component -> get_voltage() << std::setw(6)
+      std::cout << std::fixed << std::setprecision(2) << std::setw(6)
+		<< component -> get_voltage() << std::setw(6)
 		<< component -> get_current();
     }
-  std::cout << std::endl;
+  // std::cout << std::setprecision(4) << "\np: " << n[0] -> p.charge << "  R124: "<< n[1] -> n.charge
+  // 	     << "  R23: "<< n[2] -> n.charge << std::endl;
+  std::cout <<  std::endl;
+
 }
 
-void simulate(std::vector<Component*> n, int iteration, int number, double t)
+void simulate(std::vector<Component*>& n, int iteration, int number, double t)
 {
+  // std::cout  << n[0] -> p.charge << "  "<< n[0] -> n.charge << std::endl;
   int counter {0};
   
   for(Component* component: n)
@@ -117,8 +139,8 @@ void simulate(std::vector<Component*> n, int iteration, int number, double t)
   	{
   	  component -> simulate(t);
   	}
-      if( counter == iteration / number)
-  	{
+      if(counter == iteration / number)
+	{
 	  print(n);
 	  counter = 0;
   	}
@@ -128,7 +150,7 @@ void simulate(std::vector<Component*> n, int iteration, int number, double t)
 
 int main()
 {
-  Connection p, n, R124, R23;
+  Connection p, n, R124, R23, R12;
   std::vector <Component*> net{};
 
   net.push_back(new Battery("Bat", 24.0, p, n));
@@ -139,7 +161,7 @@ int main()
    
 
   simulate(net, 200000, 10, 0.01);
-  // std::cout << "ok" << std::endl;
-  //  std::cout << "P: " << p.charge << "\nN: " << n.charge << std::endl;
+  
+  
   return 0;
 }
