@@ -625,13 +625,10 @@ SCENARIO( "List can be moved to other lists" )
 
 	  l2 = std::move(l);
 	  
-	  THEN( "the new list has five items same as old list and old list is empty" )
+	  THEN( "the new list has five items same as old list" )
 	    {
 	      REQUIRE( l2.to_string() == "8 29 43 60 298");
 	      REQUIRE( l2.size() == 5 );
-	      
-	      REQUIRE( l.is_empty() );
-	      REQUIRE( l.size() == 0 );
 	    }
 	}
 

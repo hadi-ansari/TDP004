@@ -12,7 +12,7 @@ private:
   struct Node;
   Node* first{};
   
-  void insert_node( Node* &, int);
+  void insert_node(Node* &, int);
   void del(Node*);
   
  public:
@@ -41,9 +41,6 @@ private:
   //                listan är sorterad eller inte. Namnet antyder att listan
   //                ska vara sorterad så det borde inte behövas för användaren
   //                till listan. 
-  // bool check_order()const; /Hadi & Nils: Vi har fixat koden så att den inte behöver en
-  //          check_order funktion längre.
-  
   int get_value(int const )const; /* return value by index (zero indexing) */
   int get_first_value()const;
   int get_last_value()const;
