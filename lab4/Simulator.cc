@@ -5,16 +5,11 @@
 
 #include "Simulator.h"
 
-
-
 /*       Connection          */
 struct Connection
 {
   Connection()
     : charge{0}
-  {}
-  Connection(double v)
-    : charge{v}
   {}
   
   double charge;
@@ -22,95 +17,93 @@ struct Connection
 
 
 /*      Component          */
-
-Component::Component(std::string name, Connection& p, Connection& n)
-  :name{name}, p{p}, n{n}
+Component::Component(std::string name, Connection& connection1, Connection& connection2)
+  :name{name}, connection1{connection1}, connection2{connection2}
 {}
 
 
 /*       Resistor          */
-Resistor::Resistor(std::string name, double resistance, Connection& p, Connection& n)
-  : Component::Component{name, p, n}, resistance{resistance}
+Resistor::Resistor(std::string name, double resistance,
+		   Connection& connection1, Connection& connection2)
+  : Component::Component{name, connection1, connection2}, resistance{resistance}
 {}
 
-void Resistor::simulate(double t)
+void Resistor::simulate(double const time)
 {
   double temp{};
-  if(n.charge < p.charge)
+  
+  if(connection2.charge < connection1.charge)
     {
-      temp = (p.charge - n.charge) / resistance * t;
-      n.charge += temp;
-      p.charge -= temp;
+      temp = (connection1.charge - connection2.charge) / resistance * time;
+      connection2.charge += temp;
+      connection1.charge -= temp;
       
     }
   else
     {
-      temp = (n.charge - p.charge) / resistance * t;
-      p.charge += temp;
-      n.charge -= temp;
+      temp = (connection2.charge - connection1.charge) / resistance * time;
+      connection1.charge += temp;
+      connection2.charge -= temp;
     }
 }
-double Resistor::get_voltage()
+double Resistor::get_voltage() const
 {
-  return p.charge - n.charge;
+  return connection1.charge - connection2.charge;
 }
-double Resistor::get_current()
+double Resistor::get_current() const
 {
   return get_voltage() / resistance; 
 }
 
 
 /*       Battery          */
-Battery::Battery(std::string name, double voltage, Connection& p, Connection& n)
-  : Component::Component{name, p, n}, voltage{voltage}
+Battery::Battery(std::string name, double voltage, Connection& connection1,
+		 Connection& connection2)
+  : Component::Component{name, connection1, connection2}, voltage{voltage}
 {}
-void Battery::simulate(double t)
+void Battery::simulate(double const time)
 {
-   p.charge = voltage;
-   n.charge = 0;
+  connection1.charge = voltage;
+  connection2.charge = 0;
 }
-double Battery::get_voltage()
+double Battery::get_voltage() const
 {
   return voltage;
 }
-double Battery::get_current()
+double Battery::get_current() const
 {
   return 0;
-}
-void Battery::set_voltage(double const v)
-{
-  voltage = v;
 }
 
 /*       Capacitor          */
 Capacitor::Capacitor(std::string name, double capacity,
-		     Connection& p, Connection& n)
-  : Component::Component{name, p, n}, capacity{capacity}, load{0}
+		     Connection& connection1, Connection& connection2)
+  : Component::Component{name, connection1, connection2}, capacity{capacity}, load{0}
 {}
-void Capacitor::simulate(double t)
+void Capacitor::simulate(double time)
 {
   double temp{};
   
-  if(n.charge < p.charge)
+  if(connection2.charge < connection1.charge)
     {
-      temp = capacity * (p.charge - n.charge - load) * t;
-      n.charge += temp;
+      temp = capacity * (connection1.charge - connection2.charge - load) * time;
+      connection2.charge += temp;
       load += temp;
-      p.charge -= temp;
+      connection1.charge -= temp;
     }
   else
     {
-      temp = capacity * (n.charge - p.charge - load) * t;
-      p.charge += temp;
+      temp = capacity * (connection2.charge - connection1.charge - load) * time;
+      connection1.charge += temp;
       load += temp;
-      n.charge -= temp;
+      connection2.charge -= temp;
     }
 }
-double Capacitor::get_voltage()
+double Capacitor::get_voltage() const
 {
-  return p.charge - n.charge;
+  return connection1.charge - connection2.charge;
 }
-double Capacitor::get_current()
+double Capacitor::get_current() const
 {
   return capacity * ( get_voltage() - load);
 }
@@ -118,9 +111,9 @@ double Capacitor::get_current()
 
 
 
-void print(std::vector<Component*>& n)
+void print_statistics(std::vector<Component*>& net)
 {
-  for(Component* component: n)
+  for(Component* component: net)
     {
       std::cout << std::fixed << std::setprecision(2) << std::setw(6)
 		<< component -> get_voltage() << std::setw(6)
@@ -158,7 +151,7 @@ void simulate(std::vector<Component*>& net, int iteration, int number, double t)
   	}
       if(counter == iteration / number)
 	{
-	  print(net);
+	  print_statistics(net);
 	  counter = 0;
   	}
       ++counter;
