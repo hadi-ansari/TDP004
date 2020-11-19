@@ -45,7 +45,7 @@ private:
 class Capacitor: public Component
 {
  public:
-  Capacitor(std::string , double, double, Connection&, Connection&);
+  Capacitor(std::string , double, Connection&, Connection&);
   void simulate(double) override;
   double get_voltage() override;
   double get_current() override;
