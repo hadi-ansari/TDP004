@@ -95,14 +95,14 @@ void Capacitor::simulate(double t)
   
   if(n.charge < p.charge)
     {
-      temp = capacity * (p.charge - n.charge) * t;
+      temp = capacity * (p.charge - n.charge - load) * t;
       n.charge += temp;
       load += temp;
       p.charge -= temp;
     }
   else
     {
-      temp = capacity * (n.charge - p.charge) * t;
+      temp = capacity * (n.charge - p.charge - load) * t;
       p.charge += temp;
       load += temp;
       n.charge -= temp;
@@ -193,7 +193,7 @@ int main()
   net.push_back(new Battery("Bat", 24.0, P, N));
   net.push_back(new Ressistor("R1", 150.0, P, L));
   net.push_back(new Ressistor("R2", 50.0, P, R));
-  net.push_back(new Capacitor("C3", 1.0, L, R));
+  net.push_back(new Capacitor("C3", 1.0, R, L));
   net.push_back(new Ressistor("R4", 300.0, L, N));
   net.push_back(new Capacitor("C5", 0.75, R, N));
   
