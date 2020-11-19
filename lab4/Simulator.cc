@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iomanip>
+#include <stdexcept>
 
 #include "Simulator.h"
 
@@ -158,40 +159,85 @@ void simulate(std::vector<Component*>& net, int iteration, int number, double t)
     }
 }
 
-int main()
+int arg_error_check(char* argv[], int arg1, int arg2, double arg3, double arg4)
 {
+try
+  {
+    arg1 = std::stoi(argv[1]);
+    arg2 = std::stoi(argv[2]);
+    arg3 = std::stod(argv[3]);
+    arg4 = std::stod(argv[4]);
+  }
+
+  catch (std::invalid_argument const& ia_error)
+  {
+    std::cerr << "Felaktig inmatning av argument. Mata endast in heltal eller decimaler." << std::endl;
+    exit(1);
+  }
+  
+try
+  {
+    if (arg1 < 0 || arg2 < 0 || arg3 < 0 || arg4 < 0)
+    {
+      throw 1;
+    }
+  }
+  catch (int error_code)
+  {
+    std::cerr << "Felaktig inmatning av argument. Talen måste vara positiva"<< std::endl;
+    exit(1);
+  }
+  return 0;
+
+}
+int main(int argc, char* argv[])
+{
+    int iterations{};
+    int printed_its{};
+    double time_per_it{};
+    double battery_current{};
+
+    arg_error_check(argv, iterations, printed_its, time_per_it, battery_current);
+
+    iterations = std::stoi(argv[1]);
+    printed_its = std::stoi(argv[2]);
+    time_per_it = std::stod(argv[3]);
+    battery_current = std::stod(argv[4]);
+
+
+
   // Connection P, N, R124, R23, R12;
   // std::vector <Component*> net{};
 
-  // net.push_back(new Battery("Bat", 24.0, P, N));
+  // net.push_back(new Battery("Bat", battery_current, P, N));
   // net.push_back(new Resistor{"R1", 6.0, P, R124});
   // net.push_back(new Resistor{"R2", 4.0, R124, R23});
   // net.push_back(new Resistor{"R3", 8.0, R23, N});
   // net.push_back(new Resistor{"R4", 12.0, R124, N});
    
-  // Connection P, N, L, R;       
-  // std::vector <Component*> net{};
-
-  // net.push_back(new Battery("Bat", 24.0, P, N));
-  // net.push_back(new Resistor("R1", 150.0, P, L));
-  // net.push_back(new Resistor("R2", 50.0, P, R));
-  // net.push_back(new Resistor("R3", 100.0, R, L));
-  // net.push_back(new Resistor("R4", 300.0, L, N));
-  // net.push_back(new Resistor("R5", 250.0, R, N));
-  
-  // simulate(net, 200000, 10, 0.01);
-
-
-  Connection P, N, L, R;
+  Connection P, N, L, R;       
   std::vector <Component*> net{};
-  net.push_back(new Battery("Bat", 24.0, P, N));
+
+  net.push_back(new Battery("Bat", battery_current, P, N));
   net.push_back(new Resistor("R1", 150.0, P, L));
   net.push_back(new Resistor("R2", 50.0, P, R));
-  net.push_back(new Capacitor("C3", 1.0, R, L));
+  net.push_back(new Resistor("R3", 100.0, R, L));
   net.push_back(new Resistor("R4", 300.0, L, N));
-  net.push_back(new Capacitor("C5", 0.75, R, N));
+  net.push_back(new Resistor("R5", 250.0, R, N));
   
-  simulate(net, 200000, 10, 0.01);
+  // Connection P, N, L, R;
+  // std::vector <Component*> net{};
+  // net.push_back(new Battery("Bat", battery_current, P, N));
+  // net.push_back(new Resistor("R1", 150.0, P, L));
+  // net.push_back(new Resistor("R2", 50.0, P, R));
+  // net.push_back(new Capacitor("C3", 1.0, R, L));
+  // net.push_back(new Resistor("R4", 300.0, L, N));
+  // net.push_back(new Capacitor("C5", 0.75, R, N));
+
+  // std::cout << "Iterations: " << iterations << " Lines: " << printed_its << " Time per iteration: " << time_per_it << " Battery current: " << battery_current << std::endl;
+
+   simulate(net, iterations, printed_its, time_per_it);
+
   
   return 0;
 }
