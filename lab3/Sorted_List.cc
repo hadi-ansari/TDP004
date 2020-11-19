@@ -6,8 +6,8 @@
 
 struct Sorted_List::Node
 {
-  Node(Node* ptr, int v)
-    : value{v}, next{ptr}
+  Node(Node* ptr, int value)
+    : value{value}, next{ptr}
   {}
   
   int value{};
@@ -17,8 +17,8 @@ struct Sorted_List::Node
 Sorted_List::Sorted_List()
   : first{nullptr}
 {}
-Sorted_List::Sorted_List(int const v)
-  : first{new Node{ nullptr, v}}
+Sorted_List::Sorted_List(int const value)
+  : first{new Node{ nullptr, value}}
 {}
 // Kommentar: Bättre att utnyttja konstruktorn i tilldelnings-
 //            operator än som ni gjort nu. 
@@ -32,14 +32,13 @@ Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
 {
   Node* current{first};
   Node* current_rhs{rhs.first};
-   
+  Node* temp{};
   // removing all items in lhs list if it is not empty
   while(current != nullptr)
   {
     // Kommentar: ni skapar en ny nodepekare varje iteration av loopen.
     //            Skulle kunna deklarera temp utanför.
-    Node* temp{current};
-       
+    temp = current;
     current = current -> next;
     remove(temp -> value);
   }
@@ -49,11 +48,20 @@ Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
   //                redan på rätt plats när vi kallar insert, så utnyttja det
   //                istället.
   // (Deep) Copying items from rhs to lhs which is empty now
-  
+  current = first;
   while(current_rhs != nullptr)
   {
-    insert(current_rhs -> value);
-    current_rhs = current_rhs -> next; 
+    if(current == nullptr)
+      {
+	first = new Node{nullptr, current_rhs -> value};
+      }
+    else
+      {
+	current -> next = new Node{nullptr, current_rhs -> value};
+	current = current -> next;
+      }
+    current_rhs = current_rhs -> next;
+    
   }
    
   return *this;
@@ -70,7 +78,6 @@ Sorted_List::Sorted_List(Sorted_List && rhs)
 Sorted_List& Sorted_List::operator=(Sorted_List && rhs)
 {
   std::swap(first, rhs.first);
-  rhs.~Sorted_List(); /* calling rhs destructor explicitly */
   return *this;
 }
 
@@ -101,7 +108,7 @@ void Sorted_List::insert(int const v)
   insert_node(first, v);
 }
 // Recursive insert function
-void Sorted_List::insert_node(Node* & ptr, int v)
+void Sorted_List::insert_node(Node* & ptr, int value)
 {
   // Kommentar: De två första delarna av if-satsen skulle kunna lösas
   //            med ptr = new Node{ptr,v}; Alltså ligga i samma block.
@@ -109,34 +116,34 @@ void Sorted_List::insert_node(Node* & ptr, int v)
   //            new Node{nullptr,v}
   if(ptr == nullptr)
   {
-    ptr = new Node{nullptr, v};
+    ptr = new Node{nullptr, value};
   }
-  else if(ptr -> value > v)
+  else if(ptr -> value > value)
   {
-    Node* temp{new Node{ptr, v}};
+    Node* temp{new Node{ptr, value}};
     ptr = temp;
   }
   else
   {
-    insert_node(ptr -> next, v);
+    insert_node(ptr -> next, value);
   }
   
 }
 // Iterative remove function
-void Sorted_List::remove(int const v)
+void Sorted_List::remove(int const value)
 {
   Node* current{first};
   Node* previous{first};
   
   while(current != nullptr)
   {
-    if(first -> value == v)
+    if(first -> value == value)
   	{
   	  first = current -> next;
   	  delete current;
   	  break;
   	}
-    else if(current -> value == v)
+    else if(current -> value == value)
   	{
   	  previous -> next = current -> next;
   	  delete current;
