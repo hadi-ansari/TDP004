@@ -42,18 +42,17 @@ Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
     current = current -> next;
     remove(temp -> value);
   }
-
   // Komplettering: onödigt att anropa insert här. Insert går igenom listan
   //                från början igen (den börjar ju iterera från first). Vi är
   //                redan på rätt plats när vi kallar insert, så utnyttja det
   //                istället.
   // (Deep) Copying items from rhs to lhs which is empty now
-  current = first;
   while(current_rhs != nullptr)
   {
-    if(current == nullptr)
+    if(first == nullptr)
       {
 	first = new Node{nullptr, current_rhs -> value};
+	current = first;
       }
     else
       {
@@ -61,7 +60,6 @@ Sorted_List& Sorted_List::operator=(Sorted_List const& rhs)
 	current = current -> next;
       }
     current_rhs = current_rhs -> next;
-    
   }
    
   return *this;
@@ -103,9 +101,9 @@ void Sorted_List::del(Node* ptr)
   }
 }
 
-void Sorted_List::insert(int const v)
+void Sorted_List::insert(int const value)
 {
-  insert_node(first, v);
+  insert_node(first, value);
 }
 // Recursive insert function
 void Sorted_List::insert_node(Node* & ptr, int value)
@@ -197,28 +195,6 @@ int Sorted_List::size()const
   return counter;
 }
 
-
-// bool Sorted_List::check_order()const
-// {
-//   if(size() > 1)
-//   {
-//     Node* previous{first -> next};
-//     Node* current{first -> next -> next};
-      
-//     while(current != nullptr)
-//     {
-//       if(previous -> value > current -> value)
-// 	    {
-// 	      return false;
-// 	    }
-//       current = current -> next;
-//       previous = previous -> next;
-//     }
-//   }
-//   return true;
-// }
-
-
 // Komplettering: Spar undan size som en lokal variabel i funktionen istället
 //                för att anropa den i varje iteration i for-loopen. Nu jämför
 //                vi variabeln i med returvärdet av size() i varje
@@ -228,6 +204,7 @@ int Sorted_List::get_value(int const index)const
 {
   Node* current{first};
   int list_size = size();
+  
   for(int i{0}; i < list_size ; ++i)
   {
     if (i == index)
@@ -239,7 +216,6 @@ int Sorted_List::get_value(int const index)const
 
   return -1;
 }
-
 int Sorted_List::get_first_value()const
 {
   return first -> value;
