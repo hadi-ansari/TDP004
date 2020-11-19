@@ -62,33 +62,29 @@ void Time::fix_time()
 // Kommentar: Fantastiskt bra att ni använder stringstream! Det gör det hela så mycket lättare.
 std::string Time::to_string(bool time_24 )const
 {
+  std::string adjusted_hour{std::to_string(hour)};
+  std::string suffix{};
   std::stringstream ss;
-
-  ss << std::setfill('0');
-   
-  if(time_24)
-    {
-      ss << std::setw(2) << hour << ':' << std::setw(2) << minute
-	 << ':' << std::setw(2) << second;
-    }
-  else
+ 
+  if(!time_24)
     {
       if(hour < 12)
 	{
-	  ss << std::setw(2) << hour << ':' << std::setw(2) << minute
-	     << ':' << std::setw(2) << second << " am";
+	  suffix = " am";
 	}
       else if(hour == 12)
 	{
-	  ss << std::setw(2) << hour << ':' << std::setw(2) << minute
-	     << ':' << std::setw(2) << second << " pm";
+	  suffix = " pm";
 	}
       else
 	{
-	  ss << std::setw(2) << (hour % 12) << ':' << std::setw(2) << minute
-	     << ':' << std::setw(2) << second << " pm";
+	  adjusted_hour = std::to_string(hour - 12);
+	  suffix = " pm";
 	}
     }
+  ss << std::setfill('0') << std::setw(2) << adjusted_hour << ':' << std::setw(2) << minute
+     << ':' << std::setw(2) << second << suffix;
+  
   return ss.str();
 }
 
