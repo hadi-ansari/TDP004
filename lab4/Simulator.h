@@ -16,10 +16,10 @@ class Component
   Connection& n;
 };
 
-class Ressistor: public Component
+class Resistor: public Component
 {
  public:
-  Ressistor(std::string , double, Connection&, Connection&);
+  Resistor(std::string , double, Connection&, Connection&);
   void simulate(double ) override;
   double get_voltage() override;
   double get_current() override;
