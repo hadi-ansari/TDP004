@@ -11,6 +11,7 @@
 │   ├── info.txt
 │   ├── test_main.cc
 │   ├── test_main.o
+│   ├── #Time.cc#
 │   ├── Time.cc
 │   ├── Time.h
 │   └── time_test.cc
@@ -18,12 +19,16 @@
 │   ├── a.out
 │   ├── catch.hpp
 │   ├── info.txt
-│   ├── main.cc
 │   ├── Sorted_List.cc
 │   ├── Sorted_List.h
 │   ├── sorted_list_test.cc
 │   ├── test_main.cc
 │   └── test_main.o
+├── lab4
+│   ├── a.out
+│   ├── main.cc
+│   ├── Simulator.cc
+│   └── Simulator.h
 └── README.md
 
-4 directories, 22 files
+5 directories, 26 files

@@ -1,7 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <iomanip>
 #include <stdexcept>
 
 #include "Simulator.cc"
@@ -10,12 +8,6 @@
 
 int main(int argc, char* argv[])
 {
-  // std::cout << argv[0] << " " << argv[1] << " " << argv[2] << " "  << argv[3]
-  // 	    << " "  << argv[4] << std::endl;
-
-  // std::cout << argv[0] << " " << std::stoi(argv[1]) << " " << std::stoi(argv[2])
-  // 	    << " "  << std::stod(argv[3]) << " "  << std::stod(argv[4]) << std::endl;
-
   int iterations{};
   int printed_its{};
   double time_per_it{};
@@ -60,15 +52,8 @@ int main(int argc, char* argv[])
       return 1;
     }
 
-    // arg_error_check(argv, iterations, printed_its, time_per_it, battery_current);
-
-    // iterations = std::stoi(argv[1]);
-    // printed_its = std::stoi(argv[2]);
-    // time_per_it = std::stod(argv[3]);
-    // battery_current = std::stod(argv[4]);
-
-
-
+  std::cout << std::endl;
+  // första kretsen
   Connection P, N, R124, R23, R12;
   std::vector <Component*> net{};
 
@@ -79,11 +64,9 @@ int main(int argc, char* argv[])
   net.push_back(new Resistor{"R4", 12.0, R124, N});
   simulate(net, iterations, printed_its, time_per_it);
 
-  P.charge = 0;
-  N.charge = 0;
   net.clear();
   std::cout << std::endl;
-  
+  // andra kretsen  
   Connection L, R;  
 
   net.push_back(new Battery("Bat", battery_voltage, P, N));
@@ -94,13 +77,12 @@ int main(int argc, char* argv[])
   net.push_back(new Resistor("R5", 250.0, R, N));
   simulate(net, iterations, printed_its, time_per_it);
 
-  P.charge = 0;
-  N.charge = 0;
   L.charge = 0;
   R.charge = 0;
   net.clear();
   std::cout << std::endl;
-  
+
+  // tredje kretsen
   net.push_back(new Battery("Bat", battery_voltage, P, N));
   net.push_back(new Resistor("R1", 150.0, P, L));
   net.push_back(new Resistor("R2", 50.0, P, R));

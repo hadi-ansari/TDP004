@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include <iomanip>
-#include <stdexcept>
 
 #include "Simulator.h"
 
@@ -158,35 +157,33 @@ void simulate(std::vector<Component*>& net, int iteration, int number, double t)
   	}
     }
 }
+// int arg_error_check(char* argv[], int arg1, int arg2, double arg3, double arg4)
+// {
+// try
+//   {
+//     arg1 = std::stoi(argv[1]);
+//     arg2 = std::stoi(argv[2]);
+//     arg3 = std::stod(argv[3]);
+//     arg4 = std::stod(argv[4]);
+//   }
 
-int arg_error_check(char* argv[], int arg1, int arg2, double arg3, double arg4)
-{
-try
-  {
-    arg1 = std::stoi(argv[1]);
-    arg2 = std::stoi(argv[2]);
-    arg3 = std::stod(argv[3]);
-    arg4 = std::stod(argv[4]);
-  }
-
-  catch (std::invalid_argument const& ia_error)
-  {
-    std::cerr << "Felaktig inmatning av argument. Mata endast in heltal eller decimaler." << std::endl;
-    exit(1);
-  }
+//   catch (std::invalid_argument const& ia_error)
+//   {
+//     std::cerr << "Felaktig inmatning av argument. Mata endast in heltal eller decimaler." << std::endl;
+//     exit(1);
+//   }
   
-try
-  {
-    if (arg1 < 0 || arg2 < 0 || arg3 < 0 || arg4 < 0)
-    {
-      throw 1;
-    }
-  }
-  catch (int error_code)
-  {
-    std::cerr << "Felaktig inmatning av argument. Talen måste vara positiva"<< std::endl;
-    exit(1);
-  }
-  return 0;
-
-}
+// try
+//   {
+//     if (arg1 < 0 || arg2 < 0 || arg3 < 0 || arg4 < 0)
+//     {
+//       throw 1;
+//     }
+//   }
+//   catch (int error_code)
+//   {
+//     std::cerr << "Felaktig inmatning av argument. Talen måste vara positiva"<< std::endl;
+//     exit(1);
+//   }
+//   return 0;
+// }
