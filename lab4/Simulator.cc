@@ -122,7 +122,7 @@ void print_statistics(std::vector<Component*>& net)
   std::cout << std::endl;
 }
 
-void simulate(std::vector<Component*>& net, int iteration, int number, double t)
+void simulate(std::vector<Component*>& net, int iteration, int number, double time)
 {
   int counter {0};
 
@@ -148,7 +148,7 @@ void simulate(std::vector<Component*>& net, int iteration, int number, double t)
       ++counter;
       for(Component* component: net)
   	{
-  	  component -> simulate(t);
+  	  component -> simulate(time);
   	}
       if(counter == iteration / number)
 	{
