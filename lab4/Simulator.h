@@ -11,7 +11,7 @@ class Component
   virtual double get_voltage()const=0;
   virtual double get_current()const=0;
 
-  std::string name;
+  std::string const name;
   Connection& connection1;
   Connection& connection2;
 };
@@ -25,7 +25,7 @@ class Resistor: public Component
   double get_current() const override;
   
  private:
-  double resistance;
+  double const resistance;
 };
 
 class Battery: public Component
@@ -37,7 +37,7 @@ public:
   double get_current() const override;
   
 private:
-  double voltage;
+  double const voltage;
 };
   
 class Capacitor: public Component
@@ -49,7 +49,7 @@ class Capacitor: public Component
   double get_current() const override;
   
  private:
-  double capacity;
+  double const capacity;
   double load;
 };
 
