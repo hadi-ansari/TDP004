@@ -2,7 +2,7 @@
 #include <vector>
 #include <stdexcept>
 
-#include "Simulator.cc"
+#include "Simulator.h"
 
 // int argc, char* argv[]
 

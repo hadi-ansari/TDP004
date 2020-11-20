@@ -6,14 +6,6 @@
 #include "Simulator.h"
 
 /*       Connection          */
-struct Connection
-{
-  Connection()
-    : charge{0}
-  {}
-  
-  double charge;
-};
 
 
 /*      Component          */
@@ -61,7 +53,7 @@ Battery::Battery(std::string name, double voltage, Connection& connection1,
 		 Connection& connection2)
   : Component::Component{name, connection1, connection2}, voltage{voltage}
 {}
-void Battery::simulate(double const time)
+void Battery::simulate(double const)
 {
   connection1.charge = voltage;
   connection2.charge = 0;

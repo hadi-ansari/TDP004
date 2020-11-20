@@ -1,7 +1,15 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-struct Connection;
+struct Connection
+{
+  Connection()
+    : charge{0}
+  {}
+  
+  double charge;
+};
+
 
 class Component
 {
@@ -52,5 +60,9 @@ class Capacitor: public Component
   double const capacity;
   double load;
 };
+void print_statistics(std::vector<Component*>&);
+void simulate(std::vector<Component*>& net, int iteration, int number, double time);
+
+
 
 #endif
