@@ -20,7 +20,7 @@ std::string Component::get_name() const
 }
 
 /*       Resistor          */
-Resistor::Resistor(std::string name, double resistance, Connection&  connection1,
+Resistor::Resistor(std::string name, double resistance, Connection& connection1,
 		   Connection& connection2)
   : Component::Component{name, connection1, connection2}, resistance{resistance}
 {}
@@ -132,9 +132,9 @@ void simulate(std::vector<Component*> const& net, int iteration, int number, dou
     std::cout << std::endl;
 
     int size = net.size();
-    for (int i= 0; i < size; ++i) 
+    for (int i = 0; i < size; ++i) 
       {
-	std::cout << std::setw(6) <<"volt" << std::setw(6) << "curr";
+	std::cout << std::setw(6) << "volt" << std::setw(6) << "curr";
       }
     std::cout << std::endl;
   }
@@ -153,4 +153,14 @@ void simulate(std::vector<Component*> const& net, int iteration, int number, dou
 	  counter = 0;
   	}
     }
+}
+
+void clear(std::vector<Component*> & net)
+{
+  for (Component* component: net) 
+    { 
+      delete component;
+    }
+
+  net.clear();
 }

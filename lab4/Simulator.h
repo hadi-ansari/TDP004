@@ -61,7 +61,7 @@ class Resistor: public Component
 {
  public:
   Resistor(std::string , double, Connection&, Connection& );
-  virtual ~Resistor() = default;
+  ~Resistor() = default;
   
   void simulate(double const ) override;
   double get_voltage() const override;
@@ -75,7 +75,7 @@ class Battery: public Component
 {
 public:
   Battery(std::string , double, Connection&, Connection& );
-  virtual ~Battery() = default;
+  ~Battery() = default;
   
   void simulate(double const) override;
   double get_voltage() const override;
@@ -89,7 +89,7 @@ class Capacitor: public Component
 {
  public:
   Capacitor(std::string , double, Connection&, Connection& );
-  virtual ~Capacitor() = default;
+  ~Capacitor() = default;
   
   void simulate(double const) override;
   double get_voltage() const override;
@@ -101,6 +101,6 @@ class Capacitor: public Component
 };
 
 void print_statistics(std::vector<Component*> const&);
-void simulate(std::vector<Component*> const& net, int iteration, int number, double time);
-
+void simulate(std::vector<Component*>  const& net, int iteration, int number, double time);
+void clear(std::vector<Component*> & net);
 #endif

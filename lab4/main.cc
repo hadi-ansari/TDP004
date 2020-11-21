@@ -73,12 +73,7 @@ int main(int argc, char* argv[])
   net.push_back(new Resistor{"R4", 12.0, R124, N});
   simulate(net, iterations, printed_its, time_per_it);
 
-  for (Component* component: net) 
-    { 
-      delete component;
-    }
-
-  net.clear();
+  clear(net);
   std::cout << std::endl;
   // andra kretsen  
   Connection L, R;  
@@ -90,14 +85,11 @@ int main(int argc, char* argv[])
   net.push_back(new Resistor("R4", 300.0, L, N));
   net.push_back(new Resistor("R5", 250.0, R, N));
   simulate(net, iterations, printed_its, time_per_it);
-
-  for (Component* component: net) 
-    { 
-      delete component;
-    }
+  
+  clear(net);
   L.charge = 0;
   R.charge = 0;
-  net.clear();
+
   std::cout << std::endl;
 
   // tredje kretsen
@@ -109,9 +101,7 @@ int main(int argc, char* argv[])
   net.push_back(new Capacitor("C5", 0.75, R, N));
   simulate(net, iterations, printed_its, time_per_it);
 
-  for (Component* component: net) 
-    { 
-      delete component;
-    }
+  clear(net);
+  
   return 0;
 }
