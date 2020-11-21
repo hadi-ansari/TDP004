@@ -9,14 +9,19 @@
 
 
 /*      Component          */
-Component::Component(std::string name, Connection& connection1, Connection& connection2)
+Component::Component(std::string const& name, Connection& connection1,
+		     Connection& connection2)
   :name{name}, connection1{connection1}, connection2{connection2}
 {}
 
+std::string Component::get_name() const
+{
+  return name;
+}
 
 /*       Resistor          */
-Resistor::Resistor(std::string name, double resistance,
-		   Connection& connection1, Connection& connection2)
+Resistor::Resistor(std::string name, double resistance, Connection&  connection1,
+		   Connection& connection2)
   : Component::Component{name, connection1, connection2}, resistance{resistance}
 {}
 
@@ -103,7 +108,7 @@ double Capacitor::get_current() const
 
 
 
-void print_statistics(std::vector<Component*>& net)
+void print_statistics(std::vector<Component*> const& net)
 {
   for(Component* component: net)
     {
@@ -114,7 +119,7 @@ void print_statistics(std::vector<Component*>& net)
   std::cout << std::endl;
 }
 
-void simulate(std::vector<Component*>& net, int iteration, int number, double time)
+void simulate(std::vector<Component*> const& net, int iteration, int number, double time)
 {
   int counter {0};
 
@@ -122,7 +127,7 @@ void simulate(std::vector<Component*>& net, int iteration, int number, double ti
   {
     for (Component* component: net) 
       { 
-	std::cout << std::setw(12) << component -> name;
+	std::cout << std::setw(12) << component -> get_name();
       }
     std::cout << std::endl;
 
