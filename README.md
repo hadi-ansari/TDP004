@@ -29,6 +29,14 @@
 │   ├── main.cc
 │   ├── Simulator.cc
 │   └── Simulator.h
+├── lab5
+│   ├── a.out
+│   ├── catch.hpp
+│   ├── sorted_array.cc
+│   ├── sorted_array.h
+│   ├── sorted_array_test.cc
+│   ├── test_main.cc
+│   └── test_main.o
 └── README.md
 
-5 directories, 26 files
+6 directories, 33 files

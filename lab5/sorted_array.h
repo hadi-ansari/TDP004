@@ -5,31 +5,37 @@
 #include <initializer_list>
 #include <ostream>
 
+template <typename T>
 class sorted_array
 {
-
 public:
-
-    sorted_array() = default;
-    sorted_array(std::initializer_list<int> list);
-
-    void insert(int value);
-    int erase(int index);
-
-    int & operator[](int index);
-    int operator[](int index) const;
-
-    int & at(int index);
-    int at(int index) const;
-
-    int size() const;
-
+  
+  sorted_array() = default;
+  sorted_array(std::initializer_list<T> list);
+  
+  void insert(T value);
+  T erase(int index);
+  
+  T & operator[](int index);
+  T operator[](int index) const;
+  
+  T & at(int index);
+  T at(int index) const;
+  
+  int size() const;
+  
 private:
 
-    std::vector<int> data{};
+    std::vector<T> data{};
 
 };
 
-std::ostream & operator<<(std::ostream & os, sorted_array const & array);
+template <typename T>
+std::ostream & operator<<(std::ostream & os, sorted_array<T> const & array);
+
+
+#include "sorted_array.cc"
 
 #endif//SORTED_ARRAY_H
+
+

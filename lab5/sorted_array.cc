@@ -1,21 +1,24 @@
 #include "sorted_array.h"
 
 #include <utility>
+#include <string>
+#include <initializer_list>
 #include <stdexcept>
 
 using namespace std;
 
-sorted_array::sorted_array(initializer_list<int> list)
+template <typename T>
+sorted_array<T>::sorted_array(initializer_list <T> list)
     : data{}
 {
-    for (int val : list)
+    for (T val : list)
     {
         insert(val);
     }
 }
 
-
-void sorted_array::insert(int value)
+template <typename T>
+void sorted_array<T>::insert(T value)
 {
     data.push_back(value);
     for (int i {size() - 1}; i > 0; --i)
@@ -31,7 +34,8 @@ void sorted_array::insert(int value)
     }
 }
 
-int sorted_array::erase(int index)
+template <typename T>
+T sorted_array<T>::erase(int index)
 {
     if (index < 0 || index >= size())
         throw std::out_of_range{"unable to erase; index is out of bounds."};
@@ -39,37 +43,43 @@ int sorted_array::erase(int index)
     {
         swap(data[i], data[i+1]);
     }
-    int value {data.back()};
+    T value {data.back()};
     data.pop_back();
     return value;
 }
 
-int & sorted_array::operator[](int index)
+template <typename T>
+T & sorted_array<T>::operator[](int index)
 {
     return data[index];
 }
 
-int sorted_array::operator[](int index) const
+template <typename T>
+T sorted_array<T>::operator[](int index) const
 {
     return data[index];
 }
 
-int & sorted_array::at(int index)
+template <typename T>
+T & sorted_array<T>::at(int index)
 {
     return data.at(index);
 }
 
-int sorted_array::at(int index) const
+template <typename T>
+T sorted_array<T>::at(int index) const
 {
     return data.at(index);
 }
 
-int sorted_array::size() const
+template <typename T>
+int sorted_array<T>::size() const
 {
     return static_cast<int>(data.size());
 }
 
-ostream & operator<<(ostream & os, sorted_array const & array)
+template <typename T>
+ostream & operator<<(ostream & os, sorted_array<T> const & array)
 {
     if (array.size() == 0)
     {
