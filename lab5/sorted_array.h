@@ -4,6 +4,22 @@
 #include <vector>
 #include <initializer_list>
 #include <ostream>
+#include <cstdlib>
+
+template <typename T>
+class Distance
+{
+public:
+  Distance(T center)
+    : center{center}
+  {}
+  bool compare(T a, T b)
+  {
+    return abs(a - center) < abs(b - center);
+  }
+private:
+  T center{};
+};
 
 template <typename T>
 class Less
