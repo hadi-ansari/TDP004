@@ -6,12 +6,23 @@
 #include <ostream>
 
 template <typename T>
+class Less
+{
+ public:
+  bool compare(T a, T b)
+  {
+    return a < b;
+  }
+
+};
+
+template <typename T, typename C = Less<T>>
 class sorted_array
 {
 public:
   
   sorted_array() = default;
-  sorted_array(std::initializer_list<T> list);
+  sorted_array(std::initializer_list<T> list, C comparator = {});
   
   void insert(T value);
   T erase(int index);
@@ -25,13 +36,15 @@ public:
   int size() const;
   
 private:
+  std::vector<T> data{};
+  C comparator;
 
-    std::vector<T> data{};
 
 };
 
-template <typename T>
-std::ostream & operator<<(std::ostream & os, sorted_array<T> const & array);
+template <typename T, typename C>
+std::ostream & operator<<(std::ostream & os, sorted_array<T, C> const & array);
+
 
 
 #include "sorted_array.cc"

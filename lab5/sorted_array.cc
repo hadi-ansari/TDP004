@@ -7,9 +7,9 @@
 
 using namespace std;
 
-template <typename T>
-sorted_array<T>::sorted_array(initializer_list <T> list)
-    : data{}
+template <typename T, typename C>
+sorted_array<T, C>::sorted_array(initializer_list <T> list, C comparator)
+  : data{}, comparator{comparator}
 {
     for (T val : list)
     {
@@ -17,13 +17,13 @@ sorted_array<T>::sorted_array(initializer_list <T> list)
     }
 }
 
-template <typename T>
-void sorted_array<T>::insert(T value)
+template <typename T, typename C>
+void sorted_array<T, C>::insert(T value)
 {
     data.push_back(value);
     for (int i {size() - 1}; i > 0; --i)
     {
-        if (data[i] < data[i-1])
+      if (comparator.compare (data[i], data[i-1]))
         {
             swap(data[i-1], data[i]);
         }
@@ -34,8 +34,8 @@ void sorted_array<T>::insert(T value)
     }
 }
 
-template <typename T>
-T sorted_array<T>::erase(int index)
+template <typename T, typename C>
+T sorted_array<T, C>::erase(int index)
 {
     if (index < 0 || index >= size())
         throw std::out_of_range{"unable to erase; index is out of bounds."};
@@ -48,37 +48,37 @@ T sorted_array<T>::erase(int index)
     return value;
 }
 
-template <typename T>
-T & sorted_array<T>::operator[](int index)
+template <typename T, typename C>
+T & sorted_array<T, C>::operator[](int index)
 {
     return data[index];
 }
 
-template <typename T>
-T sorted_array<T>::operator[](int index) const
+template <typename T, typename C>
+T sorted_array<T, C>::operator[](int index) const
 {
     return data[index];
 }
 
-template <typename T>
-T & sorted_array<T>::at(int index)
+template <typename T, typename C>
+T & sorted_array<T, C>::at(int index)
 {
     return data.at(index);
 }
 
-template <typename T>
-T sorted_array<T>::at(int index) const
+template <typename T, typename C>
+T sorted_array<T, C>::at(int index) const
 {
     return data.at(index);
 }
 
-template <typename T>
-int sorted_array<T>::size() const
+template <typename T, typename C>
+int sorted_array<T, C>::size() const
 {
     return static_cast<int>(data.size());
 }
 
-template <typename T>
+template <typename T, typename C>
 ostream & operator<<(ostream & os, sorted_array<T> const & array)
 {
     if (array.size() == 0)
@@ -93,4 +93,11 @@ ostream & operator<<(ostream & os, sorted_array<T> const & array)
     }
     os << '}';
     return os;
+}
+
+template <typename T>
+bool less(T a, T b)
+{
+  return a > b;
+  
 }
