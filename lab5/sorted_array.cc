@@ -8,6 +8,16 @@
 using namespace std;
 
 template <typename T, typename C>
+sorted_array<T, C>::sorted_array(initializer_list <T> list)
+  : data{}, comparator{}
+{
+    for (T val : list)
+    {
+        insert(val);
+    }
+}
+
+template <typename T, typename C>
 sorted_array<T, C>::sorted_array(initializer_list <T> list, C comparator)
   : data{}, comparator{comparator}
 {
@@ -16,6 +26,7 @@ sorted_array<T, C>::sorted_array(initializer_list <T> list, C comparator)
         insert(val);
     }
 }
+
 
 template <typename T, typename C>
 void sorted_array<T, C>::insert(T value)
@@ -79,7 +90,7 @@ int sorted_array<T, C>::size() const
 }
 
 template <typename T, typename C>
-ostream & operator<<(ostream & os, sorted_array<T> const & array)
+ostream & operator<<(ostream & os, sorted_array<T, C> const & array)
 {
     if (array.size() == 0)
     {
@@ -93,11 +104,4 @@ ostream & operator<<(ostream & os, sorted_array<T> const & array)
     }
     os << '}';
     return os;
-}
-
-template <typename T>
-bool less(T a, T b)
-{
-  return a > b;
-  
 }

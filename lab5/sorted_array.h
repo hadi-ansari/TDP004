@@ -38,7 +38,8 @@ class sorted_array
 public:
   
   sorted_array() = default;
-  sorted_array(std::initializer_list<T> list, C comparator = {});
+  sorted_array(std::initializer_list<T> list);
+  sorted_array(std::initializer_list<T> list, C comparator);
   
   void insert(T value);
   T erase(int index);

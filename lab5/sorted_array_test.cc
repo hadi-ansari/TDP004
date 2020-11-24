@@ -261,50 +261,116 @@ TEST_CASE("const array string")
   CHECK_THROWS (a.at(5));
 }
 
-// TEST_CASE("print empty int")
-// {
-//     std::ostringstream oss;
-//     sorted_array <int> empty;
-//     oss << empty;
-//     CHECK (oss.str() == "{}");
-// }
+TEST_CASE("print empty int")
+{
+    std::ostringstream oss;
+    sorted_array <int> empty;
+    oss << empty;
+    CHECK (oss.str() == "{}");
+}
 
-// TEST_CASE("print empty double")
-// {
-//     std::ostringstream oss;
-//     sorted_array <double> empty;
-//     oss << empty;
-//     CHECK (oss.str() == "{}");
-// }
+TEST_CASE("print empty double")
+{
+    std::ostringstream oss;
+    sorted_array <double> empty;
+    oss << empty;
+    CHECK (oss.str() == "{}");
+}
 
-// TEST_CASE("print empty stringe")
-// {
-//     std::ostringstream oss;
-//     sorted_array <string> empty;
-//     oss << empty;
-//     CHECK (oss.str() == "{}");
-// }
+TEST_CASE("print empty stringe")
+{
+    std::ostringstream oss;
+    sorted_array <string> empty;
+    oss << empty;
+    CHECK (oss.str() == "{}");
+}
 
-// TEST_CASE("print int")
-// {
-//     std::ostringstream oss;
-//     sorted_array <int> array{2, 3, 5, 7, 11, 13};
-//     oss << array;
-//     CHECK (oss.str() == "{2, 3, 5, 7, 11, 13}");
-// }
+TEST_CASE("print int")
+{
+    std::ostringstream oss;
+    sorted_array <int> array{2, 3, 5, 7, 11, 13};
+    oss << array;
+    CHECK (oss.str() == "{2, 3, 5, 7, 11, 13}");
+}
 
-// TEST_CASE("print double")
-// {
-//     std::ostringstream oss;
-//     sorted_array <double> array{2.2, 3.6, 5.0, 7.2, 11.12, 13.03};
-//     oss << array;
-//     CHECK (oss.str() == "{2.2, 3.6, 5, 7.2, 11.12, 13.03}");
-// }
-// TEST_CASE("print string")
-// {
-//     std::ostringstream oss;
-//     sorted_array <string> array{"aa", "bb", "cc", "dd", "ee"};
-//     oss << array;
-//     CHECK (oss.str() == "{aa, bb, cc, dd, ee}");
-// }
+TEST_CASE("print double")
+{
+    std::ostringstream oss;
+    sorted_array <double> array{2.2, 3.6, 5.0, 7.2, 11.12, 13.03};
+    oss << array;
+    CHECK (oss.str() == "{2.2, 3.6, 5, 7.2, 11.12, 13.03}");
+}
+TEST_CASE("print string")
+{
+    std::ostringstream oss;
+    sorted_array <string> array{"aa", "bb", "cc", "dd", "ee"};
+    oss << array;
+    CHECK (oss.str() == "{aa, bb, cc, dd, ee}");
+}
 
+TEST_CASE("int sorted array med Less comparator stil1")
+{
+  sorted_array<int, Less<int>> a{{1, 2, 8, 7, 11}, {}};
+
+  CHECK (a.size() == 5);
+  CHECK (a[0] == 1);
+  CHECK (a[1] == 2);
+  CHECK (a[2] == 7 );
+  CHECK (a[3] == 8);
+  CHECK (a[4] == 11);
+}
+TEST_CASE("double sorted array med Less comparator stil1")
+{
+  sorted_array<double, Less<double>> a{{1.5, 6.7, 3.4, 1.6, 11.5}, {}};
+
+  CHECK (a.size() == 5);
+  CHECK (a[0] == 1.5);
+  CHECK (a[1] == 1.6);
+  CHECK (a[2] == 3.4 );
+  CHECK (a[3] == 6.7);
+  CHECK (a[4] == 11.5);
+}
+TEST_CASE("int sorted array med Less comparator stil2")
+{
+  sorted_array<int, Less<int>> a{1, 2, 8, 7, 11};
+
+  CHECK (a.size() == 5);
+  CHECK (a[0] == 1);
+  CHECK (a[1] == 2);
+  CHECK (a[2] == 7 );
+  CHECK (a[3] == 8);
+  CHECK (a[4] == 11);
+}
+TEST_CASE("double sorted array med Less comparator stil2")
+{
+  sorted_array<double, Less<double>> a{1.5, 6.7, 3.4, 1.6, 11.5};
+
+  CHECK (a.size() == 5);
+  CHECK (a[0] == 1.5);
+  CHECK (a[1] == 1.6);
+  CHECK (a[2] == 3.4 );
+  CHECK (a[3] == 6.7);
+  CHECK (a[4] == 11.5);
+}
+TEST_CASE("int sorted array med Distance comparator")
+{
+  sorted_array<int, Distance<int>> a{{1, 2, 8, 7, 11}, 7};
+
+  CHECK (a.size() == 5);
+  CHECK (a[0] == 7);
+  CHECK (a[1] == 8);
+  CHECK (a[2] == 11 );
+  CHECK (a[3] == 2);
+  CHECK (a[4] == 1);
+}
+TEST_CASE("double sorted array med Distance comparator")
+{
+  sorted_array<double, Distance<double>> a{{1.5, 6.7, 3.4, 1.6, 11.5}, 5};
+
+  CHECK (a.size() == 5);
+  CHECK (a[0] == 3.4);
+  CHECK (a[1] == 6.7);
+  CHECK (a[2] == 1.6 );
+  CHECK (a[3] == 1.5);
+  CHECK (a[4] == 11.5);
+}
