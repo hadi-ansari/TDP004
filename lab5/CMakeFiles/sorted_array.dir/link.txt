@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++17   CMakeFiles/sorted_array.dir/sorted_array_test.cc.o CMakeFiles/sorted_array.dir/test_main.cc.o  -o sorted_array 
