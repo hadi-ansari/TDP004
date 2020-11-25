@@ -29,7 +29,7 @@ sorted_array<T, C>::sorted_array(initializer_list <T> list, C comparator)
 
 
 template <typename T, typename C>
-void sorted_array<T, C>::insert(T value)
+void sorted_array<T, C>::insert(T const& value)
 {
     data.push_back(value);
     for (int i {size() - 1}; i > 0; --i)

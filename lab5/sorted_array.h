@@ -41,7 +41,7 @@ public:
   sorted_array(std::initializer_list<T> list);
   sorted_array(std::initializer_list<T> list, C comparator);
   
-  void insert(T value);
+  void insert(T const& value);
   T erase(int index);
   
   T & operator[](int index);
