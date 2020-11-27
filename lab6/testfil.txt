@@ -14,3 +14,4 @@ fel-nej--ajaj // dubbel.bindestreck.efter.redan.godkänt.ensamt.bindestreck
 "(((aj)!?"    // för.få.bokstäver
 "("felnej)#   // ogiltigt.tecken.i.slutet
 !(fel-nej)!   // ogiltigt.tecken.i.början
+NEJ!NEJ
