@@ -47,7 +47,6 @@ int main(/*int argc, char *argv[]*/)
   
   // get_valid(words);
 
-  // 
   words.erase(remove_if(words.begin(), words.end(),
 			 [](string x)
 			 {
@@ -61,7 +60,7 @@ int main(/*int argc, char *argv[]*/)
 
   for (auto & word : words)
     {
-      for(string::iterator it = word.begin(); it != word.end(); it++)
+      for(auto it = word.begin(); it != word.end(); it++)
 	{
 	  if(isalpha(*it)) break;
 	  else
@@ -72,19 +71,36 @@ int main(/*int argc, char *argv[]*/)
 	    
 	}
     }
-  // for (auto & word : words)
-  //   {
-  //     for(auto it = word.end() - 1; it == word.begin(); it--)
-  // 	{
-  // 	  if(isalpha(*it)) break;
-  // 	  else
-  // 	    {
-  // 	      word.erase(it);
-  // 	      it ++;
-  // 	    }
-  // 	}
-  //   }
+  
+  for (auto & word : words)
+    {
+      for(auto it = word.rbegin(); it != word.rend(); it++)
+  	{
+  	  if(isalpha(*it)) break;
+  	  else
+  	    {
+  	      word.erase((it + 1).base());
+  	    }
+  	}
+    }
+  // removing words with invalid "'s"
+  words.erase(remove_if(words.begin(), words.end(),
+  			 [](string x)
+  			 {
+  			   int indx = x.find("'s");
+			   int size = x.size();
+  			   return( ( indx != size - 2 ) && ( indx > 0 ) ) ;
+  			 }),
+  	      words.end());
 
+  // transform(words.begin(), words.end(), words.begin(),
+  // 		  [](string x)
+  // 		  {
+  // 		    x.erase(find(x.begin(), x.end(), ' '));
+  // 		    return x;
+  // 		  }
+  // 		  );
+  
    for (auto it = begin(words); it != end(words); ++it)
     {
       cout << *it << endl;
