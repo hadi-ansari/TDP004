@@ -8,24 +8,30 @@
 using namespace std;
 
 template <typename T, typename C>
-sorted_array<T, C>::sorted_array(initializer_list <T> list)
-  : data{}, comparator{}
+sorted_array<T, C>::sorted_array(initializer_list <T> list, C comparator)
+  : data{}, comparator{comparator}
 {
-    for (T val : list)
+    // Komplettering: Här kopierar ni varje element i 'list' en gång
+    // mer än vad som behövs. Använd const referenser när hanterar
+    // godtyckliga datatyper.
+    for (T const& val : list)
     {
         insert(val);
     }
 }
 
-template <typename T, typename C>
-sorted_array<T, C>::sorted_array(initializer_list <T> list, C comparator)
-  : data{}, comparator{comparator}
-{
-    for (T val : list)
-    {
-        insert(val);
-    }
-}
+// // Komplettering: Exakt samma kropp ovan, kan ni kanske implementera den
+// // ena m.h.a. av den andra?
+
+// template <typename T, typename C>
+// sorted_array<T, C>::sorted_array(initializer_list <T> list, C comparator)
+//   : data{}, comparator{comparator}
+// {
+//     for (T val : list)
+//     {
+//         insert(val);
+//     }
+// }
 
 
 template <typename T, typename C>
@@ -90,7 +96,7 @@ int sorted_array<T, C>::size() const
 }
 
 template <typename T, typename C>
-ostream & operator<<(ostream & os, sorted_array<T, C> const & array)
+ostream & operator<<(ostream & os, sorted_array<T, C> const& array)
 {
     if (array.size() == 0)
     {

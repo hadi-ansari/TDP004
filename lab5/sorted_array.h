@@ -6,14 +6,21 @@
 #include <ostream>
 #include <cstdlib>
 
+// Komplettering: Fundera på vad som händer om T är en jättestor
+// datatyp eller en datatyp som är dyr att kopiera. Överför vi
+// parametrar på det bästa sättet för att ta hänsyn till det?
+// T.ex. Onödigt att kopiera in 'a' och 'b' till compare, bättre att
+// bara ta dem som de är.
+
 template <typename T>
 class Distance
 {
 public:
-  Distance(T center)
+    
+  Distance(T const& center)
     : center{center}
   {}
-  bool compare(T a, T b)
+  bool compare(T const& a, T const& b)
   {
     return abs(a - center) < abs(b - center);
   }
@@ -25,7 +32,7 @@ template <typename T>
 class Less
 {
  public:
-  bool compare(T a, T b)
+  bool compare(T const& a, T const& b)
   {
     return a < b;
   }
@@ -38,8 +45,8 @@ class sorted_array
 public:
   
   sorted_array() = default;
-  sorted_array(std::initializer_list<T> list);
-  sorted_array(std::initializer_list<T> list, C comparator);
+  // sorted_array(std::initializer_list<T> list);
+  sorted_array(std::initializer_list<T> list, C comparator = {});
   
   void insert(T const& value);
   T erase(int index);
@@ -60,10 +67,10 @@ private:
 };
 
 template <typename T, typename C>
-std::ostream & operator<<(std::ostream & os, sorted_array<T, C> const & array);
+std::ostream & operator<<(std::ostream & os, sorted_array<T, C> const& array);
 
 
-
+// Kommentar: Bra!
 #include "sorted_array.cc"
 
 #endif//SORTED_ARRAY_H
