@@ -10,27 +10,38 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
-  vector<string> words{};
-  string word{};
-  ifstream ifs{argv[1]};
-  string flag = argv[2];
-  
   if(argc < 2)
     {
       cerr << "Error: No arguments given.\nUsage: a.out FILE [-a] [-f] [-o N]"
-  	  << endl;
+	   << endl;
       return 1;
     }
-  else if(argc < 3)
+  if(argc < 3)
     {
       cerr << "Error: Second argument missing or invalid.\n";
       cerr << "Usage: ./a.out FILE [-a] [-f] [-o N]" << endl;
       return 1;
     }
   
+  ifstream ifs{argv[1]};
+  if(!ifs)
+    {
+      cerr << "Error: The file does not exist." << endl;
+      return 1;
+    }
+  vector<string> words{};
+  string word{};
+  string flag = argv[2];
+  
   while(ifs >> word)
     {
       words.push_back(word);
+    }
+  
+  if(words.size() == 0)
+    {
+      cerr << "Error: The file is empty." << endl;
+      return 1;
     }
   
   // Tar bort ord som inte börjar/slutar med vanliga bokstav/giltiga skräptecken
@@ -99,7 +110,7 @@ int main(int argc, char * argv[])
   // Tar bort "'s" från slutet av de ord som har engelsk genitivändelse.
   // Johan's -> Johan
   transform(words.begin(), words.end(), words.begin(),
-  		  [](string x)
+  		  [](string & x)
   		  {
   		    int indx = x.find("'s");
   		    int size = x.size();
@@ -204,30 +215,50 @@ int main(int argc, char * argv[])
   	    }
         }
     }
-  // else
-  //   {
-  //     // flagga -o n
-  //     int sum{0};
-  //      for(auto it = begin(words); it != end(words); ++it)
-  //       {
-  //         sum += (*it).size();
-  //         if(sum < n)
-  //     	cout << *it << " ";
-  //         else
-  //     	{
-  //     	  cout << "\n" << *it << " ";
-  //     	  sum = (*it).size();
-  //     	}
-  //       }
+  else if(flag == "-o")
+    {
+      int number{};
+      int sum{0};
+      if(argc < 4)
+	{
+	  cerr << "Error: Last argument missing a value.\n";
+	  cerr << "Usage: ./a.out FILE [-a] [-f] [-o N]" << endl;
+	  return 1;
+	}
+      try
+	{
+	  number = stoi(argv[3]);
+	}
+      catch(invalid_argument const& error)
+	{
+	  cerr << "Error: Incorrect entry of arguments after \"-o\". Enter only integers."
+	       << endl;
+	  return 1;
+	}      
+      for_each(words.begin(), words.end(),
+	       [&sum, &number](string x)
+      	   {
+	     int size = x.size();
+	     if ( sum + size < number )
+	       {
+		 cout << x << " ";
+		 sum += size + 1;
+	       }
+	     else
+	       {
+		 cout << "\n" << x << " ";
+		 sum = size + 1;
+	       }
+      	   }
+      	   );
+      cout << endl;
+    }
+  else
+    {
+      cerr << "Error: invalid flag. \n"
+	   << "Usage: ./a.out FILE [-a] [-f] [-o N]" << endl;
+      return 1;
+    }
 
-  //     for_each(words.begin(), words.end(),
-  //     	   [](string x)
-  //     	   {
-  //     	     sum = 12;
-  //     	     x.append('*'); 
-  //     	   }
-  //     	   );
-  //   }
-  
   return 0;
 }
