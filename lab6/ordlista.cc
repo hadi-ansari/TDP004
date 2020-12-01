@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <algorithm>
 #include <map>
@@ -25,12 +26,12 @@ int main(int argc, char * argv[])
       cerr << "Error: Second argument missing or invalid.\n";
       cerr << "Usage: ./a.out FILE [-a] [-f] [-o N]" << endl;
       return 1;
-    }  
+    }
+  
   while(ifs >> word)
     {
       words.push_back(word);
     }
-
   
   // Tar bort ord som inte börjar/slutar med vanliga bokstav/giltiga skräptecken
   // T.e tas bort dessa ord -> #hej "Hello"/ )bye. osv...
@@ -43,7 +44,7 @@ int main(int argc, char * argv[])
 					 && !isalpha(x.back()) ) );
 			     }),
 	      words.end());
-
+  
   // Tar bort inledande skräptecken för varje ord i vector
   // T.e -> "(Hello") (Bye")
   // Efter detta steg -> Hello") Bye")
@@ -63,6 +64,7 @@ int main(int argc, char * argv[])
 	    
   	}
     }
+  
   // Tar bort avslutande skräptecken för varje ord i vector
   // T.e -> Hello") Bye")
   // Efter detta steg -> Hello Bye
@@ -133,7 +135,7 @@ int main(int argc, char * argv[])
   			 }),
   	      words.end());
   
-  // Tar bor ord som är mindre än 3 bokstav lång
+  // Tar bort ord som är mindre än 3 bokstav lång
   words.erase(remove_if(words.begin(), words.end(),
   			[](string x)
   			{
@@ -141,14 +143,32 @@ int main(int argc, char * argv[])
   			}),
   	      words.end());
 
-
-  
+  //Konverteras till små bokstäver
+  for(auto & word: words)
+    {
+      for_each(word.begin(), word.end(), [](char & c) {
+					   c = ::tolower(c);
+					 });
+    }
+    
+  // Giltiga ord läggas till en map med antal förekomster 
   map<string , int> m1{};
   for(auto it = words.begin(); it != words.end(); it ++)
     {
       m1[*it]++;
     }
   
+  // Hittar max storlek för ord
+  unsigned int max_size = 0;
+
+  for(auto m: m1)
+    {
+      if (m.first.size() > max_size)
+	max_size = m.first.size();
+    }
+  
+  // En vector för att spara antal förekomster
+  // Använs när mappen ska sorteras efter värde (-f flaggan)
   vector<int> values{};
   
   for (auto it = m1.begin(); it != m1.end(); ++it)
@@ -157,32 +177,28 @@ int main(int argc, char * argv[])
     }
   sort(values.begin(), values.end(), greater<int>());
 
-  // for (auto it = begin(words); it != end(words); ++it)
-  //   {
-  //     cout << *it << endl;
-  //   }
-
+  // Sparar storlek på största siffran i mappen
+  unsigned int max_number = size( to_string(values[0]) );
 
   if(flag == "-a")
     {
-      //flagga -a
       for (auto it = m1.begin(); it != m1.end(); ++it)
   	{
-  	  cout << it -> first << " " << it -> second << endl;
+  	  cout << setw(max_size) << left << it -> first << "  "
+	       << setw(max_number) << it -> second << endl;
   	}
     }
   else if(flag == "-f")
     {
-      // flagga -f
-  
-      for(auto it = values.begin(); it != values.end(); ++it)
+      for(auto value: values)
         {
-          for (auto it2 = m1.begin(); it2 != m1.end(); ++it2)
+          for (auto it = m1.begin(); it != m1.end(); ++it)
   	    {
-  	      if(*it == it2 -> second)
+  	      if(value == it -> second)
   		{
-  		  cout << it2 -> first << " " << it2 -> second << endl;
-  		  it2 = m1.erase(it2);
+  		  cout << setw(max_size) << it -> first << "  "
+		       << setw(max_number) << it -> second << endl;
+  		  it = m1.erase(it);
   		  break;
   		}
   	    }
@@ -212,5 +228,6 @@ int main(int argc, char * argv[])
   //     	   }
   //     	   );
   //   }
+  
   return 0;
 }
