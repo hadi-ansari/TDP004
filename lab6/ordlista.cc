@@ -59,41 +59,44 @@ int main(int argc, char * argv[])
   // Tar bort inledande skräptecken för varje ord i vector
   // T.e -> "(Hello") (Bye")
   // Efter detta steg -> Hello") Bye")
-  for (auto & word : words)
-    {
-      for(auto it = word.begin(); it != word.end(); it++)
-  	{
-  	  if(isalpha(*it))
-  	    {
-  	      break;
-  	    }
-  	  else
-  	    {
-  	      word.erase(it);
-  	      it --;
-  	    }
-	    
-  	}
-    }
-  
+  transform(words.begin(), words.end(), words.begin(),
+	    [](string x)
+	    {
+	      for(auto it = x.begin(); it != x.end(); it++)
+		{
+		  if(isalpha(*it))
+		    {
+		      return x;
+		    }
+		  else
+		    {
+		      x.erase(it);
+		      it --;
+		    }
+		}
+	      return x;
+	    }
+	    );
   // Tar bort avslutande skräptecken för varje ord i vector
   // T.e -> Hello") Bye")
   // Efter detta steg -> Hello Bye
-  for (auto & word : words)
-    {
-      for(auto it = word.rbegin(); it != word.rend(); it++)
-  	{
-  	  if(isalpha(*it))
-  	    {
-  	      break;
-  	    }
-  	  else
-  	    {
-  	      word.erase((it + 1).base());
-  	    }
-  	}
-    }
-  
+  transform(words.begin(), words.end(), words.begin(),
+	    [](string x)
+	    {
+	      for(auto it = x.rbegin(); it != x.rend(); it++)
+		{
+		  if(isalpha(*it))
+		    {
+		      return x;
+		    }
+		  else
+		    {
+		      x.erase( (it + 1).base() );
+		    }
+		}
+	      return x;
+	    }
+	    );
   // Tar bort alla ord som innehåller ogiltiga "'s" från vector
   // T.e tas bort -> Johan's's he'skjr's O'scar
   // Men inte Emma's Johan's osv
@@ -162,17 +165,17 @@ int main(int argc, char * argv[])
 					 });
     }
     
-  // Giltiga ord läggas till en map med antal förekomster 
-  map<string , int> m1{};
+  // Giltiga ord läggas till en map med antal förekomster
+  map<string , int> valid_words{};
   for(auto it = words.begin(); it != words.end(); it ++)
     {
-      m1[*it]++;
+      valid_words[*it]++;
     }
   
   // Hittar max storlek för ord
   unsigned int max_size = 0;
 
-  for(auto m: m1)
+  for(auto m: valid_words)
     {
       if (m.first.size() > max_size)
 	max_size = m.first.size();
@@ -182,7 +185,7 @@ int main(int argc, char * argv[])
   // Använs när mappen ska sorteras efter värde (-f flaggan)
   vector<int> values{};
   
-  for (auto it = m1.begin(); it != m1.end(); ++it)
+  for (auto it = valid_words.begin(); it != valid_words.end(); ++it)
     {
       values.push_back(it -> second);
     }
@@ -190,30 +193,34 @@ int main(int argc, char * argv[])
 
   // Sparar storlek på största siffran i mappen
   unsigned int max_number = size( to_string(values[0]) );
-
+  
   if(flag == "-a")
     {
-      for (auto it = m1.begin(); it != m1.end(); ++it)
-  	{
-  	  cout << setw(max_size) << left << it -> first << "  "
-	       << setw(max_number) << it -> second << endl;
-  	}
+      for_each(valid_words.begin(), valid_words.end(),
+	       [&max_size, &max_number](pair<string, int>  x)
+	       {
+		 cout << setw(max_size) << left << x.first << "  "
+		      << setw(max_number) <<  x.second << endl;
+	       }
+	       );
     }
   else if(flag == "-f")
     {
-      for(auto value: values)
-        {
-          for (auto it = m1.begin(); it != m1.end(); ++it)
-  	    {
-  	      if(value == it -> second)
-  		{
-  		  cout << setw(max_size) << it -> first << "  "
-		       << setw(max_number) << it -> second << endl;
-  		  it = m1.erase(it);
-  		  break;
-  		}
-  	    }
-        }
+      for_each(values.begin(), values.end(),
+	       [&valid_words, &max_number, &max_size](int i)
+	       {
+		 for(auto it = valid_words.begin(); it != valid_words.end(); ++it)
+		   {
+		     if(i == it -> second)
+		       {
+			 cout << setw(max_size) << it -> first << "  "
+			      << setw(max_number) << it -> second << endl;
+			 it = valid_words.erase(it);
+			 return;
+		       }
+		   }
+	       }
+	       );
     }
   else if(flag == "-o")
     {
