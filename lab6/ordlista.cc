@@ -79,7 +79,7 @@ using namespace std;
 
 
 // Returnerar true om ordet är ogiltig annars false. Utför alla kontrollerna
-// för giltigheten
+// för giltigheten på ett ord
 bool not_valid(string & word)
 {
   string prefix_trash = "\"\'(";
@@ -143,9 +143,9 @@ int main(int argc, char * argv[])
       cerr << "Error: Second argument missing or invalid.\n";
       cerr << "Usage: ./a.out FILE [-a] [-f] [-o N]" << endl;
       return 1;
-    }
-  
+    } 
   ifstream ifs{argv[1]};
+  
   if(!ifs)
     {
       cerr << "Error: The file does not exist." << endl;
@@ -154,8 +154,6 @@ int main(int argc, char * argv[])
   vector<string> words{istream_iterator<string>{ifs},
       istream_iterator<string>{}};
   
-  string flag = argv[2];
-
   if(words.size() == 0)
     {
       cerr << "Error: The file is empty." << endl;
@@ -233,32 +231,33 @@ int main(int argc, char * argv[])
       valid_words[*it]++;
     }
   
-  // Hittar max storlek för ord
-  unsigned int max_size = 0;
+  // Hittar max storlek för ord och antal förekomster
+  unsigned int max_word_size = 0;
+  unsigned int max_number_size = 0;
   // Komplettering: std::max_element.
-  auto it = max_element(valid_words.begin(), valid_words.end());
-  max_size = it -> first.size();
-  cout << max_size << endl;
+  auto it1 = max_element(valid_words.begin(), valid_words.end());
+  max_word_size = it1 -> first.size();
   
-  // En vector för att spara antal förekomster
-  // Använs när mappen ska sorteras efter värde (-f flaggan)
+  auto it2 = max_element(valid_words.begin(), valid_words.end(),
+			[](pair<string, int> const& p1, pair<string, int> const& p2)
+			{
+			  return p1.second < p2.second;
+			}
+			);
+  max_number_size = (to_string(it2 -> second)).size();
+  
+  cout << max_word_size << endl;
+  cout << max_number_size << endl;
+
 //Kommentar: Om ni låter vectorn ha pair<string, int> i sig kan ni använda copy för att 
 //           kopiera från map till den (detta för att map innehåller pair<> av datatypen ni skapade den med),
 //           sorteringen kan ni utföra sedan med en lambda till sort som jämför it->second.
 //           Vi utskrift behöver ni då inte hantera två olika behållare.
-  vector<int> values{};
   vector<pair <string, int> > pairs(valid_words.size());
   copy(valid_words.begin(), valid_words.end(), pairs.begin());
-
-  for (auto it = valid_words.begin(); it != valid_words.end(); ++it)
-    {
-      values.push_back(it -> second);
-    }
-  sort(values.begin(), values.end(), greater<int>());
-
-  // Sparar storlek på största siffran i mappen
-  unsigned int max_number = size( to_string(values[0]) );
-
+  
+  string flag = argv[2];
+  
   if(flag == "-a")
     {
       sort(pairs.begin(), pairs.end(),
@@ -267,29 +266,36 @@ int main(int argc, char * argv[])
 	     return p1.first < p2.first;
 	   }
 	   );
-      
-      for (auto it = pairs.begin(); it != pairs.end(); ++it)
-      {
-        cout << setw(max_size) << left << it -> first << "  "
-          << setw(max_number) << it -> second << endl;
-      }
-     
-    }
-    else if (flag == "-f")
-    {
-      for_each(values.begin(), values.end(),
-	       [&valid_words, &max_number, &max_size](int i)
+
+      for_each(pairs.begin(), pairs.end(),
+	       [&max_word_size, &max_number_size](pair<string, int> const& p)
 	       {
-		 for(auto it = valid_words.begin(); it != valid_words.end(); ++it)
-		   {
-		     if(i == it -> second)
-		       {
-			 cout << setw(max_size) << it -> first << "  "
-			      << setw(max_number) << it -> second << endl;
-			 it = valid_words.erase(it);
-			 return;
-		       }
-		   }
+		 cout << setw(max_word_size) << left << p.first << "  "
+		      << setw(max_number_size) << p.second << endl;
+	       }
+	       );
+      
+      // for(auto it = pairs.begin(); it != pairs.end(); ++it)
+      // 	{
+      // 	  cout << setw(max_word_size) << left << it -> first << "  "
+      // 	       << setw(max_number_size) << it -> second << endl;
+      // 	}
+      
+    }
+  else if (flag == "-f")
+    {
+      sort(pairs.begin(), pairs.end(),
+	   [](pair<string, int> const& p1, pair<string, int> const& p2)
+	   {
+	     return p1.second > p2.second;
+	   }
+	   );
+      // Användning av for_each för utskrift istället för loop enligt komementar.
+      for_each(pairs.begin(), pairs.end(),
+	       [&max_word_size, &max_number_size](pair<string, int> const& p)
+	       {
+		 cout << setw(max_word_size) << p.first << "  "
+		      << setw(max_number_size) << p.second << endl;
 	       }
 	       );
     }
@@ -297,6 +303,7 @@ int main(int argc, char * argv[])
     {
       int number{};
       int sum{0};
+      
       if(argc < 4)
 	{
 	  cerr << "Error: Last argument missing a value.\n";
