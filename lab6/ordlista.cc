@@ -5,8 +5,130 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <iterator>
+
+// Komplettering: Lambdas ska inte koperia parametrar av klasstyp i onödan.
+
+// Komplettering: Ni har delat upp validering och borttagning av ord i flera olika steg, 
+//                detta innebär att ni måste iterera igenom vectorn och ta bort flera gånger.
+//                Skapa istället en funktion för validering som utför alla kontrollerna på ett ord.
+
+/* Komplettering: Ni ska inte använda loopar och for_each ska inte användas om en mer passande algoritm finns. 
+
+Syftet med laborationen är att ni ska lära er och öva på att använda algoritmer,
+genom att använda loopar missar ni många läromål som laborationen lär ut,
+läromål som ni dels behöver kunna för att programmera i C++ men som ni också behöver
+kunna inför tentan.
+
+Ni ska därför använda algoritmer så långt det går för att lösa problemen, algortimer
+som passar problemet i fråga. Att använda for_each ska enbart användas när ingen algoritm
+passar bra, ex. vid utskrift och kopiering mellan containrar som inte lagrar samma datatyp.
+
+C++ har många bra sträng-funktioner som ni kan använda för att manipulera strängar,
+ni behöver därför inte hantera strängar på teckennivå utan kan istället utnyttja funktionerna.
+ex. find_first_not_of("("'") istället för att söka igenom hela strängen med en loop.
+
+Ni hittar de flesta algoritmer och funktioner på följande sidor:
+https://en.cppreference.com/w/cpp/string/basic_string
+https://en.cppreference.com/w/cpp/algorithm
+https://en.cppreference.com/w/cpp/container
+https://en.cppreference.com/w/cpp/string/byte/isalpha
+
+Algoritmer ni kan komma att behöva:
+https://en.cppreference.com/w/cpp/algorithm/count
+https://en.cppreference.com/w/cpp/algorithm/find
+https://en.cppreference.com/w/cpp/algorithm/adjacent_find
+https://en.cppreference.com/w/cpp/algorithm/copy
+https://en.cppreference.com/w/cpp/algorithm/transform
+https://en.cppreference.com/w/cpp/algorithm/remove
+https://en.cppreference.com/w/cpp/algorithm/sort
+https://en.cppreference.com/w/cpp/algorithm/max_element
+
+Sträng-funktioner ni kan komma att behöva:
+https://en.cppreference.com/w/cpp/string/basic_string/front
+https://en.cppreference.com/w/cpp/string/basic_string/back
+https://en.cppreference.com/w/cpp/string/basic_string/size
+https://en.cppreference.com/w/cpp/string/basic_string/erase
+https://en.cppreference.com/w/cpp/string/basic_string/substr
+https://en.cppreference.com/w/cpp/string/basic_string/find
+https://en.cppreference.com/w/cpp/string/basic_string/rfind
+https://en.cppreference.com/w/cpp/string/basic_string/find_first_of
+https://en.cppreference.com/w/cpp/string/basic_string/find_last_of
+https://en.cppreference.com/w/cpp/string/basic_string/find_last_not_of
+
+Container-funktioner som ni kan komma att behöva:
+https://en.cppreference.com/w/cpp/container/vector/begin
+https://en.cppreference.com/w/cpp/container/vector/end
+https://en.cppreference.com/w/cpp/container/vector/erase
+https://en.cppreference.com/w/cpp/container/vector/push_back
+https://en.cppreference.com/w/cpp/container/map/operator_at
+
+ 
+
+Utnyttja även slides från föreläsningarna då dessa ofta går igenom metoder för att lösa
+
+specifika problem, exempelvis att läsa in från en ström till vector.
+
+https://www.ida.liu.se/~TDP004/current/sal/forelasning.sv.shtml
+
+Om ni har frågor eller är osäkra hur ni kan lösa ett specifikt problem med en algoritm
+kan ni alltid maila oss.
+*/
 
 using namespace std;
+
+
+// Returnerar true om ordet är ogiltig annars false. Utför alla kontrollerna
+// för giltigheten
+bool not_valid(string & word)
+{
+  string prefix_trash = "\"\'(";
+  string suffix_trash = "!?;,:.\"\')";
+  string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÅÖabcdefghijklmnopqrstuvwxyzäåö";
+  
+  if( (( word.find_first_of(prefix_trash) != 0 ) && ( !isalpha(word.front()) ))
+    || ((( word.find_last_of(suffix_trash) != word.size() - 1 )
+	&& ( !isalpha(word.back()) ) )) )
+    {
+      return true;
+    }
+  else
+    {
+      auto pos = word.find("--");
+  
+      if(pos != string::npos)
+	return true;
+      int first_alpha = word.find_first_of(alphabet);
+      int last_alpha = word.find_last_of(alphabet);
+      
+      if(last_alpha - first_alpha < 2)
+  	return true;
+      
+      string substr = word.substr(first_alpha, last_alpha - first_alpha + 1);
+      
+      
+      pos = substr.find_first_of(prefix_trash + suffix_trash);
+      
+      if( (pos != string::npos && substr[pos] != '\'' )
+  	  || (pos != string::npos && pos != substr.length() - 2) )
+  	return true;
+      
+    }
+  return false;
+}
+
+// En funktion som med std::transform konverterar strängen till små bokstäver
+string convert(string & word)
+{
+  transform(word.begin(), word.end(), word.begin(),
+  	    [](char & c) {
+  	      c = ::tolower(c);
+	      return c;
+   	    });
+  return word;
+}
+
+
 
 int main(int argc, char * argv[])
 {
@@ -29,38 +151,25 @@ int main(int argc, char * argv[])
       cerr << "Error: The file does not exist." << endl;
       return 1;
     }
-  vector<string> words{};
-  string word{};
+  vector<string> words{istream_iterator<string>{ifs},
+      istream_iterator<string>{}};
+  
   string flag = argv[2];
-  
-  while(ifs >> word)
-    {
-      words.push_back(word);
-    }
-  
+
   if(words.size() == 0)
     {
       cerr << "Error: The file is empty." << endl;
       return 1;
     }
-  
-  // Tar bort ord som inte börjar/slutar med vanliga bokstav/giltiga skräptecken
-  // T.e tas bort dessa ord -> #hej "Hello"/ )bye. osv...
-  words.erase(remove_if(words.begin(), words.end(),
-			 [](string x)
-			 {
-			   return ( ( x.find_first_of("\"\'(") != 0
-				    && !isalpha(x.front()) )
-				    || ( x.find_last_of("!?;,:.\"\')") != x.size() - 1
-					 && !isalpha(x.back()) ) );
-			     }),
-	      words.end());
+
+  // Tar bort alla ogiltiga ord från vectorn
+  words.erase(remove_if(words.begin(), words.end(), not_valid), words.end());
   
   // Tar bort inledande skräptecken för varje ord i vector
   // T.e -> "(Hello") (Bye")
   // Efter detta steg -> Hello") Bye")
   transform(words.begin(), words.end(), words.begin(),
-	    [](string x)
+	    [](string & x)
 	    {
 	      for(auto it = x.begin(); it != x.end(); it++)
 		{
@@ -77,11 +186,12 @@ int main(int argc, char * argv[])
 	      return x;
 	    }
 	    );
+  
   // Tar bort avslutande skräptecken för varje ord i vector
   // T.e -> Hello") Bye")
   // Efter detta steg -> Hello Bye
   transform(words.begin(), words.end(), words.begin(),
-	    [](string x)
+	    [](string & x)
 	    {
 	      for(auto it = x.rbegin(); it != x.rend(); it++)
 		{
@@ -97,18 +207,7 @@ int main(int argc, char * argv[])
 	      return x;
 	    }
 	    );
-  // Tar bort alla ord som innehåller ogiltiga "'s" från vector
-  // T.e tas bort -> Johan's's he'skjr's O'scar
-  // Men inte Emma's Johan's osv
-  words.erase(remove_if(words.begin(), words.end(),
-  			 [](string x)
-  			 {
-  			   int indx = x.find("'s");
-  			   int size = x.size();
-			   if(size < 3) return false;
-  			   return( ( indx != size - 2 ) && ( indx > 0 ) ) ;
-  			 }),
-  	      words.end());
+  
   
   // Tar bort "'s" från slutet av de ord som har engelsk genitivändelse.
   // Johan's -> Johan
@@ -123,50 +222,12 @@ int main(int argc, char * argv[])
   		  }
   		  );
 
-  // Tar bort alla ord som innehåller tecken som är varken bokstav eller binstreck
-  // T.e tas bort hej.hej Oscar/Johan Han/hon osv
-  // men inte Oscar--Johan han-hon ha---ha
-  words.erase(remove_if(words.begin(), words.end(),
-  			 [](string x)
-  			 {
-  			   for(char c: x)
-  			     {
-  			       if(!isalpha(c) && c != '-') return true;
-  			     }
-  			   return false;
-			   
-  			 }),
-  	      words.end());
-
-  // Tar bort alla ord som har minst två bindstreck
-  //T.e tas bort Min--bok min---bok
-  // men inte min-fin-bok
-  words.erase(remove_if(words.begin(), words.end(),
-  			 [](string x)
-  			 {
-  			   int i = x.find("--");
-  			   return !(i < 0);
-  			 }),
-  	      words.end());
-  
-  // Tar bort ord som är mindre än 3 bokstav lång
-  words.erase(remove_if(words.begin(), words.end(),
-  			[](string x)
-  			{
-  			  return x.size() < 3;
-  			}),
-  	      words.end());
-
+// Komplettering: std::transform över vektorn följst av en funktion som kör transform över ordet.
   //Konverteras till små bokstäver
-  for(auto & word: words)
-    {
-      for_each(word.begin(), word.end(), [](char & c) {
-					   c = ::tolower(c);
-					 });
-    }
-    
+  transform(words.begin(), words.end(), words.begin(), convert);
+  
   // Giltiga ord läggas till en map med antal förekomster
-  map<string , int> valid_words{};
+  map<string, int> valid_words{};
   for(auto it = words.begin(); it != words.end(); it ++)
     {
       valid_words[*it]++;
@@ -174,17 +235,21 @@ int main(int argc, char * argv[])
   
   // Hittar max storlek för ord
   unsigned int max_size = 0;
-
-  for(auto m: valid_words)
-    {
-      if (m.first.size() > max_size)
-	max_size = m.first.size();
-    }
+  // Komplettering: std::max_element.
+  auto it = max_element(valid_words.begin(), valid_words.end());
+  max_size = it -> first.size();
+  cout << max_size << endl;
   
   // En vector för att spara antal förekomster
   // Använs när mappen ska sorteras efter värde (-f flaggan)
+//Kommentar: Om ni låter vectorn ha pair<string, int> i sig kan ni använda copy för att 
+//           kopiera från map till den (detta för att map innehåller pair<> av datatypen ni skapade den med),
+//           sorteringen kan ni utföra sedan med en lambda till sort som jämför it->second.
+//           Vi utskrift behöver ni då inte hantera två olika behållare.
   vector<int> values{};
-  
+  vector<pair <string, int> > pairs(valid_words.size());
+  copy(valid_words.begin(), valid_words.end(), pairs.begin());
+
   for (auto it = valid_words.begin(); it != valid_words.end(); ++it)
     {
       values.push_back(it -> second);
@@ -193,18 +258,24 @@ int main(int argc, char * argv[])
 
   // Sparar storlek på största siffran i mappen
   unsigned int max_number = size( to_string(values[0]) );
-  
+
   if(flag == "-a")
     {
-      for_each(valid_words.begin(), valid_words.end(),
-	       [&max_size, &max_number](pair<string, int>  x)
-	       {
-		 cout << setw(max_size) << left << x.first << "  "
-		      << setw(max_number) <<  x.second << endl;
-	       }
-	       );
+      sort(pairs.begin(), pairs.end(),
+	   [](pair<string, int> const& p1, pair<string, int> const& p2)
+	   {
+	     return p1.first < p2.first;
+	   }
+	   );
+      
+      for (auto it = pairs.begin(); it != pairs.end(); ++it)
+      {
+        cout << setw(max_size) << left << it -> first << "  "
+          << setw(max_number) << it -> second << endl;
+      }
+     
     }
-  else if(flag == "-f")
+    else if (flag == "-f")
     {
       for_each(values.begin(), values.end(),
 	       [&valid_words, &max_number, &max_size](int i)
@@ -243,7 +314,7 @@ int main(int argc, char * argv[])
 	  return 1;
 	}      
       for_each(words.begin(), words.end(),
-	       [&sum, &number](string x)
+	       [&sum, &number](string & x)
       	   {
 	     int size = x.size();
 	     if ( sum + size < number )
