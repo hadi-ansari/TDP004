@@ -84,7 +84,7 @@ bool not_valid(string & word)
 {
   string prefix_trash = "\"\'(";
   string suffix_trash = "!?;,:.\"\')";
-  string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÅÖabcdefghijklmnopqrstuvwxyzäåö";
+  string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   
   if( (( word.find_first_of(prefix_trash) != 0 ) && ( !isalpha(word.front()) ))
     || ((( word.find_last_of(suffix_trash) != word.size() - 1 )
@@ -235,7 +235,12 @@ int main(int argc, char * argv[])
   unsigned int max_word_size = 0;
   unsigned int max_number_size = 0;
   // Komplettering: std::max_element.
-  auto it1 = max_element(valid_words.begin(), valid_words.end());
+  auto it1 = max_element(valid_words.begin(), valid_words.end(),
+			 [](pair<string, int> const& p1, pair<string, int> const& p2)
+			 {
+			   return p1.first.size() < p2.first.size();
+			 }
+			 );
   max_word_size = it1 -> first.size();
   
   auto it2 = max_element(valid_words.begin(), valid_words.end(),
@@ -245,9 +250,6 @@ int main(int argc, char * argv[])
 			}
 			);
   max_number_size = (to_string(it2 -> second)).size();
-  
-  cout << max_word_size << endl;
-  cout << max_number_size << endl;
 
 //Kommentar: Om ni låter vectorn ha pair<string, int> i sig kan ni använda copy för att 
 //           kopiera från map till den (detta för att map innehåller pair<> av datatypen ni skapade den med),
@@ -266,7 +268,7 @@ int main(int argc, char * argv[])
 	     return p1.first < p2.first;
 	   }
 	   );
-
+      // Användning av for_each för utskrift istället för loop enligt komementar.
       for_each(pairs.begin(), pairs.end(),
 	       [&max_word_size, &max_number_size](pair<string, int> const& p)
 	       {
@@ -274,13 +276,6 @@ int main(int argc, char * argv[])
 		      << setw(max_number_size) << p.second << endl;
 	       }
 	       );
-      
-      // for(auto it = pairs.begin(); it != pairs.end(); ++it)
-      // 	{
-      // 	  cout << setw(max_word_size) << left << it -> first << "  "
-      // 	       << setw(max_number_size) << it -> second << endl;
-      // 	}
-      
     }
   else if (flag == "-f")
     {
@@ -295,7 +290,7 @@ int main(int argc, char * argv[])
 	       [&max_word_size, &max_number_size](pair<string, int> const& p)
 	       {
 		 cout << setw(max_word_size) << p.first << "  "
-		      << setw(max_number_size) << p.second << endl;
+		      << setw(max_number_size) << right <<  p.second << endl;
 	       }
 	       );
     }
